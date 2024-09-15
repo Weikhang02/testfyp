@@ -195,7 +195,3 @@ if user_input:
     
     st.write(f"Top 5 Cars in **{classified_class.capitalize()}** Category:")
     st.table(top_5_cars)
-
-# Visualize the word class counts
-if user_input:
-    st.write
