@@ -72,11 +72,75 @@ def classify_user_input(input_text, word_classes):
     classified_class = max(class_counts, key=class_counts.get)
     return classified_class, class_counts
 
+# Define a function to extract the year, brand, and name
+def extract_year_brand_name(title):
+    if isinstance(title, str):  # Ensure that the title is a string
+        # Extract year (first four digits)
+        year = re.search(r'^\d{4}', title).group(0) if re.search(r'^\d{4}', title) else None
+        
+        # Extract brand (first word after the year)
+        brand = re.search(r'^\d{4}\s+(\w+)', title).group(1) if re.search(r'^\d{4}\s+(\w+)', title) else None
+        
+        # Extract car name (everything after the brand)
+        car_name = re.search(r'^\d{4}\s+\w+\s+(.*)', title).group(1).strip() if re.search(r'^\d{4}\s+\w+\s+(.*)', title) else None
+        
+        return year, brand, car_name
+    else:
+        return None, None, None
+
+# Define the function to extract components from the car model safely
+def categorize_components_safe(car_model):
+    try:
+        # Remove the parentheses
+        stripped_model = car_model.strip('()')
+        
+        # Split the components by spaces
+        components = stripped_model.split()
+        
+        # Define a dictionary to hold categorized components, including electric DD
+        categorized = {'L': None, 'cyl': None, 'type': None, 'transmission': None, 'electric_DD': None}
+        
+        # Check if the entire content is "electric DD"
+        if stripped_model == 'electric DD':
+            categorized['electric_DD'] = 'electric DD'
+            categorized['L'] = 'not'
+            categorized['cyl'] = 'not'
+            categorized['type'] = 'not'
+            categorized['transmission'] = 'not'
+        elif len(components) >= 4:
+            # Assign components to the respective categories
+            categorized['L'] = components[0]
+            categorized['cyl'] = components[1]
+            categorized['type'] = ' '.join(components[2:-1])  # Everything in between
+            categorized['transmission'] = components[-1]
+            categorized['electric_DD'] = 'not'
+        
+        return categorized
+    
+    except Exception as e:
+        # Return empty components if there's any error
+        return {'L': None, 'cyl': None, 'type': None, 'transmission': None, 'electric_DD': None}
+
 # UI Components
 st.title("Car Recommendation System")
 
 # Load the dataset
 df_reviews = load_data()
+
+# Extract car year, brand, and name
+df_reviews[['Car_Year', 'Car_Brand', 'Car_Name']] = df_reviews['Vehicle_Title'].apply(lambda x: pd.Series(extract_year_brand_name(x)))
+
+# Apply the safe extraction to each row in the 'Vehicle_Title' column from df_reviews
+extracted_data_safe = df_reviews['Vehicle_Title'].apply(
+    lambda x: categorize_components_safe(re.search(r'\(.*\)', x).group(0)) 
+    if pd.notnull(x) and re.search(r'\(.*\)', x) else {}
+)
+
+# Convert the extracted data to a DataFrame
+extracted_df_safe = pd.DataFrame(extracted_data_safe.tolist())
+
+# Combine the original df_reviews DataFrame with the new extracted columns
+df_reviews = pd.concat([df_reviews, extracted_df_safe], axis=1)
 
 # Preprocessing step
 df_reviews['reviews_cleaned'] = df_reviews['reviews'].apply(lambda x: preprocess_english_text(x, abbreviation_dict))
