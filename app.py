@@ -198,4 +198,4 @@ if user_input:
 
     st.write("Here are the top 5 cars matching your preferences:")
     for index, row in top_5_car_details.iterrows():
-        st.write(f"**{row['Car_Brand']} {row['Car_Name']} ({row['Car_Year']} - {row['L']}, {row['cyl']}, {row['type']}, {row['transmission']})** - {row['Price']}")
+        st.write(f"**{row['Car_Year']} {row['Car_Brand']} {row['Car_Name']} ({row['L']}, {row['cyl']}, {row['type']}, {row['transmission']})**  - {row['Price']}")
