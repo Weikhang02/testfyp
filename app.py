@@ -1,4 +1,4 @@
-# Import necessary libraries
+# Import necessary libraries 
 import streamlit as st
 import pandas as pd
 import re
@@ -180,30 +180,18 @@ df_reviews['reviews_cleaned'] = df_reviews['reviews'].apply(lambda x: preprocess
 df_reviews['vader_ss'] = df_reviews['reviews_cleaned'].apply(get_sentiment)
 df_reviews['vader_ss_normalize'] = df_reviews['vader_ss'].apply(lambda x: 1 if x >= 0 else 0)
 
-# User input for car preference
-user_input = st.text_input("Describe your ideal car (e.g., safe, comfortable, etc.):")
+# Sidebar for manual or automatic input
+option = st.sidebar.radio("Select Input Method", ("Manual Input", "Select from Options"))
 
-if user_input:
-    classified_class, class_counts = classify_user_input(user_input, word_classes)
-    st.write(f"Your input suggests you are looking for a car with a focus on **{classified_class}**.")
-    
-    # Calculate class counts for each car
-    class_counts_df = get_class_counts_by_car(df_reviews, word_classes)
-    
-    # Rank cars based on user-selected category
-    top_5_cars = rank_cars_by_category(class_counts_df, classified_class, top_n=5)
-    
-    # Match top 5 cars by car name to retrieve the relevant details
-    top_5_car_details = df_reviews[df_reviews['Car_Name'].isin(top_5_cars.index)]
-
-    # Remove duplicate entries by keeping the first occurrence of each car name
-    top_5_car_details = top_5_car_details.drop_duplicates(subset=['Car_Name'], keep='first')
-
-
-    st.write("Here are the top 5 cars matching your preferences:")
-    for index, row in top_5_car_details.iterrows():
-        st.write(f"**{row['Car_Year']} {row['Car_Brand']} {row['Car_Name']} ({row['L']}, {row['cyl']}, {row['type']}, {row['transmission']})**  - {row['Price']}")
-
-if user_input:
-    st.write("Word Class Counts in your input:")
-    st.bar_chart(pd.DataFrame(class_counts.values(), index=class_counts.keys(), columns=['Counts']))
+# Manual input option
+if option == "Manual Input":
+    user_input = st.text_input("Describe your ideal car (e.g., safe, comfortable, etc.):")
+    if user_input:
+        classified_class, class_counts = classify_user_input(user_input, word_classes)
+        st.write(f"Your input suggests you are looking for a car with a focus on **{classified_class}**.")
+        
+        # Calculate class counts for each car
+        class_counts_df = get_class_counts_by_car(df_reviews, word_classes)
+        
+        # Rank cars based on user-selected category
+        top_5_cars = rank_cars_by_category(class_counts_df, classified
