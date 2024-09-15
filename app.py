@@ -159,7 +159,7 @@ def rank_cars_by_category(class_counts_df, category, top_n=5):
     return ranked_cars
 
 # UI Components
-st.title("Car Recommendation System")
+st.title("Sentiment Based Car Recommendation System")
 
 # Load the dataset
 df_reviews = load_data()
@@ -193,5 +193,9 @@ if user_input:
     # Rank cars based on user-selected category
     top_5_cars = rank_cars_by_category(class_counts_df, classified_class, top_n=5)
     
-    st.write(f"Top 5 Cars in **{classified_class.capitalize()}** Category:")
-    st.table(top_5_cars)
+    # Get the car features for the top 5 cars and display them
+    top_5_car_details = df_reviews.loc[top_5_cars.index]  # Retrieve rows for the top 5 cars
+
+    st.write("Here are the top 5 cars matching your preferences:")
+    for index, row in top_5_car_details.iterrows():
+        st.write(f"**{row['Car_Brand']} {row['Car_Name']} ({row['Car_Year']} - {row['L']}, {row['cyl']}, {row['type']}, {row['transmission']})** - {row['Price']}")
