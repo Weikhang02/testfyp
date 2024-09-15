@@ -1,11 +1,12 @@
 # Import necessary libraries
 import streamlit as st
 import pandas as pd
-import nltk
 import re
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from collections import Counter
 from nltk.stem import WordNetLemmatizer
+import nltk
+nltk.download('stopwords')
 from nltk.corpus import stopwords
 import matplotlib.pyplot as plt
 
