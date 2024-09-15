@@ -46,7 +46,7 @@ def preprocess_english_text(text, abbreviation_dict):
 # Load data
 @st.cache
 def load_data():
-    df = pd.read_csv("Review(Latest).csv", encoding='ISO-8859-1')
+    df = pd.read_csv("processed_reviews.csv", encoding='ISO-8859-1')
     df.dropna(inplace=True)
     df['reviews'] = df[['Review_Title', 'Review']].agg('. '.join, axis=1).str.lstrip('. ')
     return df
