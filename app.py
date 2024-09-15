@@ -193,9 +193,17 @@ if user_input:
     # Rank cars based on user-selected category
     top_5_cars = rank_cars_by_category(class_counts_df, classified_class, top_n=5)
     
-    # Get the car features for the top 5 cars and display them
+    # Match top 5 cars by car name to retrieve the relevant details
+    top_5_car_details = df_reviews[df_reviews['Car_Name'].isin(top_5_cars.index)]
+
+    # Remove duplicate entries by keeping the first occurrence of each car name
     top_5_car_details = top_5_car_details.drop_duplicates(subset=['Car_Name'], keep='first')
+
 
     st.write("Here are the top 5 cars matching your preferences:")
     for index, row in top_5_car_details.iterrows():
         st.write(f"**{row['Car_Year']} {row['Car_Brand']} {row['Car_Name']} ({row['L']}, {row['cyl']}, {row['type']}, {row['transmission']})**  - {row['Price']}")
+
+if user_input:
+    st.write("Word Class Counts in your input:")
+    st.bar_chart(pd.DataFrame(class_counts.values(), index=class_counts.keys(), columns=['Counts']))
