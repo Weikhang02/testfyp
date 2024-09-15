@@ -57,50 +57,34 @@ analyzer = SentimentIntensityAnalyzer()
 def get_sentiment(review):
     return analyzer.polarity_scores(review)['compound']
 
-# Recommendation system function
+# Word class categories
 word_classes = {
     'safety': ['safety', 'secure', 'protection', 'safe', 'reliable'],
     'performance': ['performance', 'speed', 'acceleration', 'power', 'handling'],
-    'comfort': ['comfort', 'convenient', 'cozy', 'spacious', 'seats'],
+    'comfort': ['comfort', 'convenient', 'cozy', 'soft', 'relax', 'spacious', 
+        'seats', 'ergonomic', 'quiet', 'smooth', 'temperature', 
+        'climate', 'ventilation', 'ride', 'luxurious', 'adjustable', 'supportive'],
     'design': ['design', 'style', 'appearance', 'look', 'aesthetic'],
     'economy': ['economy', 'fuel', 'efficient', 'mileage', 'cost']
 }
 
-def classify_user_input(input_text, word_classes):
-    cleaned_input = preprocess_english_text(input_text, abbreviation_dict)
-    class_counts = {cls: sum(word in cleaned_input for word in keywords) for cls, keywords in word_classes.items()}
-    classified_class = max(class_counts, key=class_counts.get)
-    return classified_class, class_counts
-
 # Define a function to extract the year, brand, and name
 def extract_year_brand_name(title):
-    if isinstance(title, str):  # Ensure that the title is a string
-        # Extract year (first four digits)
+    if isinstance(title, str):
         year = re.search(r'^\d{4}', title).group(0) if re.search(r'^\d{4}', title) else None
-        
-        # Extract brand (first word after the year)
         brand = re.search(r'^\d{4}\s+(\w+)', title).group(1) if re.search(r'^\d{4}\s+(\w+)', title) else None
-        
-        # Extract car name (everything after the brand)
         car_name = re.search(r'^\d{4}\s+\w+\s+(.*)', title).group(1).strip() if re.search(r'^\d{4}\s+\w+\s+(.*)', title) else None
-        
         return year, brand, car_name
     else:
         return None, None, None
 
-# Define the function to extract components from the car model safely
+# Extract components from the car model safely
 def categorize_components_safe(car_model):
     try:
-        # Remove the parentheses
         stripped_model = car_model.strip('()')
-        
-        # Split the components by spaces
         components = stripped_model.split()
-        
-        # Define a dictionary to hold categorized components, including electric DD
         categorized = {'L': None, 'cyl': None, 'type': None, 'transmission': None, 'electric_DD': None}
         
-        # Check if the entire content is "electric DD"
         if stripped_model == 'electric DD':
             categorized['electric_DD'] = 'electric DD'
             categorized['L'] = 'not'
@@ -108,18 +92,65 @@ def categorize_components_safe(car_model):
             categorized['type'] = 'not'
             categorized['transmission'] = 'not'
         elif len(components) >= 4:
-            # Assign components to the respective categories
             categorized['L'] = components[0]
             categorized['cyl'] = components[1]
-            categorized['type'] = ' '.join(components[2:-1])  # Everything in between
+            categorized['type'] = ' '.join(components[2:-1])
             categorized['transmission'] = components[-1]
             categorized['electric_DD'] = 'not'
         
         return categorized
-    
     except Exception as e:
-        # Return empty components if there's any error
         return {'L': None, 'cyl': None, 'type': None, 'transmission': None, 'electric_DD': None}
+
+# Count word classes in reviews
+def count_word_classes(reviews, word_classes):
+    class_counts = {cls: 0 for cls in word_classes.keys()}
+    for review in reviews:
+        words = review.split()
+        for word in words:
+            for cls, keywords in word_classes.items():
+                if word in keywords:
+                    class_counts[cls] += 1
+    top_class = max(class_counts, key=class_counts.get)
+    return top_class
+
+# Count word classes with sentiment scores
+def count_word_classes_with_sentiment(reviews, word_classes, sentiment_scores):
+    class_counts = {cls: 0 for cls in word_classes.keys()}
+    for i, review in enumerate(reviews):
+        words = review.split()
+        sentiment_score = sentiment_scores[i]
+        for word in words:
+            for cls, keywords in word_classes.items():
+                if word in keywords:
+                    class_counts[cls] += 1 * sentiment_score
+    return class_counts
+
+# Get word class counts for each car
+def get_class_counts_by_car(df, word_classes):
+    reviews_by_car = df.groupby('Car_Name').agg({
+        'reviews_cleaned': lambda x: list(x),
+        'vader_ss_normalize': lambda x: list(x)
+    }).reset_index()
+
+    class_counts_list = []
+    car_names = []
+
+    for i, row in reviews_by_car.iterrows():
+        car_name = row['Car_Name']
+        reviews = row['reviews_cleaned']
+        sentiment_scores = row['vader_ss_normalize']
+        class_counts = count_word_classes_with_sentiment(reviews, word_classes, sentiment_scores)
+        class_counts_list.append(class_counts)
+        car_names.append(car_name)
+    
+    class_counts_df = pd.DataFrame(class_counts_list, index=car_names)
+    return class_counts_df
+
+# Rank the cars for each category
+def rank_cars_by_category(class_counts_df, category, top_n=5):
+    ranked_cars = class_counts_df[category].sort_values(ascending=False).head(top_n)
+    return ranked_cars
 
 # UI Components
 st.title("Car Recommendation System")
@@ -135,11 +166,7 @@ extracted_data_safe = df_reviews['Vehicle_Title'].apply(
     lambda x: categorize_components_safe(re.search(r'\(.*\)', x).group(0)) 
     if pd.notnull(x) and re.search(r'\(.*\)', x) else {}
 )
-
-# Convert the extracted data to a DataFrame
 extracted_df_safe = pd.DataFrame(extracted_data_safe.tolist())
-
-# Combine the original df_reviews DataFrame with the new extracted columns
 df_reviews = pd.concat([df_reviews, extracted_df_safe], axis=1)
 
 # Preprocessing step
@@ -153,16 +180,16 @@ user_input = st.text_input("Describe your ideal car (e.g., safe, comfortable, et
 if user_input:
     classified_class, class_counts = classify_user_input(user_input, word_classes)
     st.write(f"Your input suggests you are looking for a car with a focus on **{classified_class}**.")
-
-    # Example recommendation logic based on sentiment analysis and classification
-    recommended_cars = df_reviews[df_reviews['vader_ss_normalize'] == 1].head(5)
     
-    st.write("Here are the top 5 cars matching your preferences:")
+    # Calculate class counts for each car
+    class_counts_df = get_class_counts_by_car(df_reviews, word_classes)
     
-    for index, row in recommended_cars.iterrows():
-        st.write(f"**{row['Car_Brand']} {row['Car_Name']} ({row['Car_Year']})** - {row['Price']}")
+    # Rank cars based on user-selected category
+    top_5_cars = rank_cars_by_category(class_counts_df, classified_class, top_n=5)
+    
+    st.write(f"Top 5 Cars in **{classified_class.capitalize()}** Category:")
+    st.table(top_5_cars)
 
 # Visualize the word class counts
 if user_input:
-    st.write("Word Class Counts in your input:")
-    st.bar_chart(pd.DataFrame(class_counts.values(), index=class_counts.keys(), columns=['Counts']))
+    st.write
