@@ -68,6 +68,12 @@ word_classes = {
     'economy': ['economy', 'fuel', 'efficient', 'mileage', 'cost']
 }
 
+def classify_user_input(input_text, word_classes):
+    cleaned_input = preprocess_english_text(input_text, abbreviation_dict)
+    class_counts = {cls: sum(word in cleaned_input for word in keywords) for cls, keywords in word_classes.items()}
+    classified_class = max(class_counts, key=class_counts.get)
+    return classified_class, class_counts
+
 # Define a function to extract the year, brand, and name
 def extract_year_brand_name(title):
     if isinstance(title, str):
