@@ -194,7 +194,7 @@ if user_input:
     top_5_cars = rank_cars_by_category(class_counts_df, classified_class, top_n=5)
     
     # Get the car features for the top 5 cars and display them
-    top_5_car_details = df_reviews.loc[top_5_cars.index]  # Retrieve rows for the top 5 cars
+    top_5_car_details = df_reviews[df_reviews['Car_Name'].isin(top_5_cars.index)]
 
     st.write("Here are the top 5 cars matching your preferences:")
     for index, row in top_5_car_details.iterrows():
