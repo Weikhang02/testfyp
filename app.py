@@ -209,8 +209,8 @@ def extract_car_features(input_text):
 
 def get_car_image(car_name):
     # Convert car name to a valid file name (replace spaces with underscores)
-    file_name = car_name.replace(' ', '_') + ".jpg"
-    
+    #file_name = car_name + ".jpg"
+    file_name="Mustang Coupe EcoBoost 2dr Coupe.jpg"
     # Define the base path to your local images folder
     image_base_path = "./Car Image"  # Adjust the path as needed
     
@@ -223,10 +223,10 @@ def get_car_image(car_name):
             return image_path
         else:
             # If image not found, return a placeholder image path
-            return os.path.join(image_base_path, "no_image_available.jpg")  # Add "no_image_available.jpg" in your folder
+            return os.path.join(image_base_path, "no image available.jpg")  # Add "no_image_available.jpg" in your folder
     except Exception as e:
         st.write(f"Error loading image: {e}")
-        return os.path.join(image_base_path, "no_image_available.jpg")
+        return os.path.join(image_base_path, "no image available.jpg")
 
 # Ensure 'Price' is numeric and handle any NaN values
 #df_reviews['Price'] = pd.to_numeric(df_reviews['Price'], errors='coerce')  # Convert Price to numeric, invalid parsing will be set as NaN
