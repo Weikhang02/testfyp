@@ -9,7 +9,7 @@ import nltk
 nltk.download('stopwords')
 from nltk.corpus import stopwords
 import matplotlib.pyplot as plt
-from PIL import Image
+#from PIL import Image
 import os
 
 # Download nltk resources
