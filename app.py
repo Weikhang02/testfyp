@@ -329,7 +329,7 @@ elif option == "I need top 5 recommendations":
             car_image_path = get_car_image(['Car_Name'])
             
             # Display the image along with car details
-            st.image(car_image_path, caption=car_name, use_column_width=True)
+            st.image(car_image_path, caption=['Car_Name'], use_column_width=True)
             
             if (row['L']=="no") and (row['cyl']=="no") and (row['type']=="no") and (row['transmission']=="no"):
                 st.write(f"**{row['Car_Year']} {row['Car_Brand']} {row['Car_Name']} (Electric Drive: {row['electric_DD']})**  - {row['Price']}")
