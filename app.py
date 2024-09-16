@@ -203,8 +203,8 @@ def extract_car_features(input_text):
     }
     
 # Ensure 'Price' is numeric and handle any NaN values
-df_reviews['Price'] = pd.to_numeric(df_reviews['Price'], errors='coerce')  # Convert Price to numeric, invalid parsing will be set as NaN
-df_reviews['Price'] = df_reviews['Price'].fillna(0)  # Replace NaN values with 0 or any default value you prefer
+#df_reviews['Price'] = pd.to_numeric(df_reviews['Price'], errors='coerce')  # Convert Price to numeric, invalid parsing will be set as NaN
+#df_reviews['Price'] = df_reviews['Price'].fillna(0)  # Replace NaN values with 0 or any default value you prefer
 
 # Modify the manual input option to include car features
 if option == "Manual Input":
@@ -235,19 +235,17 @@ if option == "Manual Input":
             filtered_df = filtered_df[filtered_df['transmission'].fillna('').str.contains(car_features['transmission'], case=False)]
         
         # Display filtered cars
-        # Display filtered cars
-    if not filtered_df.empty:
-        st.write("Cars matching your criteria:")
-        for index, row in filtered_df.iterrows():
-            # Check if the "L", "cyl", "type", and "transmission" fields are None or empty
-            if (row['L']=="no") and (row['cyl']=="no") and (row['type']=="no") and (row['transmission']=="no"):
-                # If all are None, only print electric_DD
-                st.write(f"**{row['Car_Year']} {row['Car_Brand']} {row['Car_Name']} (Electric Drive: {row['electric_DD']})**  - {row['Price']}")
-            else:
-                # Otherwise, print the full set of details
-                st.write(f"**{row['Car_Year']} {row['Car_Brand']} {row['Car_Name']} ({row['L']}, {row['cyl']}, {row['type']}, {row['transmission']})**  - {row['Price']}")
+        if not filtered_df.empty:
+            st.write("Cars matching your criteria:")
+            for index, row in filtered_df.iterrows():
+                # Check if the "L", "cyl", "type", and "transmission" fields are None or empty
+                if (row['L']=="no") and (row['cyl']=="no") and (row['type']=="no") and (row['transmission']=="no"):
+                    # If all are None, only print electric_DD
+                    st.write(f"**{row['Car_Year']} {row['Car_Brand']} {row['Car_Name']} (Electric Drive: {row['electric_DD']})**  - {row['Price']}")
+                else:
+                    # Otherwise, print the full set of details
+                    st.write(f"**{row['Car_Year']} {row['Car_Brand']} {row['Car_Name']} ({row['L']}, {row['cyl']}, {row['type']}, {row['transmission']})**  - {row['Price']}")
 
-        
         # Proceed with word class classification
         classified_class, class_counts = classify_user_input(user_input, word_classes)
         st.write(f"Your input suggests you are looking for a car with a focus on **{classified_class}**.")
