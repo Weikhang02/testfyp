@@ -211,18 +211,23 @@ def get_car_image(car_name):
     # Convert car name to a valid file name (replace spaces with underscores)
     file_name = car_name.replace(' ', '_') + ".jpg"
     
-    # Define the base path to your images (this should point to your GitHub repo or local folder)
-    image_base_url = "https://github.com/Weikhang02/testfyp/tree/main/Car%20Image"  # Adjust the path and repo name
+    # Define the base path to your local images folder
+    image_base_path = "./Car Image"  # Adjust the path as needed
     
-    # Construct the image URL
-    image_url = os.path.join(image_base_url, file_name)
+    # Construct the full local image path
+    image_path = os.path.join(image_base_path, file_name)
     
     try:
-        # Try to open the image from the URL
-        return Image.open(image_url)
-    except Exception:
-        # If image not found, return a placeholder image
-        return Image.open("https://github.com/Weikhang02/testfyp/tree/main/Car%20Image/no_image_available.jpg")  # Add a "no_image_available.jpg" in the repo
+        # Check if the image exists in the specified path
+        if os.path.exists(image_path):
+            return image_path
+        else:
+            # If image not found, return a placeholder image path
+            return os.path.join(image_base_path, "no_image_available.jpg")  # Add "no_image_available.jpg" in your folder
+    except Exception as e:
+        st.write(f"Error loading image: {e}")
+        return os.path.join(image_base_path, "no_image_available.jpg")
+
 # Ensure 'Price' is numeric and handle any NaN values
 #df_reviews['Price'] = pd.to_numeric(df_reviews['Price'], errors='coerce')  # Convert Price to numeric, invalid parsing will be set as NaN
 
