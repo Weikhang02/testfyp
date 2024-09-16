@@ -269,7 +269,12 @@ if option == "Manual Input":
         
         st.write("Here are the top 5 cars matching your preferences based on sentiment analysis:")
         for index, row in top_5_car_details.iterrows():
-            st.write(f"**{row['Car_Year']} {row['Car_Brand']} {row['Car_Name']} ({row['L']}, {row['cyl']}, {row['type']}, {row['transmission']})**  - {row['Price']}")
+            if (row['L']=="no") and (row['cyl']=="no") and (row['type']=="no") and (row['transmission']=="no"):
+                    # If all are None, only print electric_DD
+                    st.write(f"**{row['Car_Year']} {row['Car_Brand']} {row['Car_Name']} (Electric Drive: {row['electric_DD']})**  - {row['Price']}")
+                else:
+                    # Otherwise, print the full set of details
+                    st.write(f"**{row['Car_Year']} {row['Car_Brand']} {row['Car_Name']} ({row['L']}, {row['cyl']}, {row['type']}, {row['transmission']})**  - {row['Price']}")
 # Option to select from car features in the sidebar
 else:
     st.sidebar.write("Select your car preferences:")
