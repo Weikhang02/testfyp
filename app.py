@@ -285,10 +285,10 @@ if option == "I know my preferences":
             car_image_path = get_car_image(car_name)
             
             # Check if the image is valid before displaying
-            if car_image_path is not None:
-                st.image(car_image_path, caption=car_name, use_column_width=True)
-            else:
-                st.write("Image could not be loaded.")
+            #if car_image_path is not None:
+                #st.image(car_image_path, caption=car_name, use_column_width=True)
+            #else:
+                #st.write("Image could not be loaded.")
             # Display the image along with car details
             #st.image(car_image_path, caption=car_name, use_column_width=True)
 
