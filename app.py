@@ -358,7 +358,7 @@ elif option == "I need top 5 recommendations":
             # Display the image along with car details
             st.image(car_image_path, caption=car_name, use_column_width=True)
 
-            if (highest_sentiment_car['L']=="no") and (highest_sentiment_car['cyl']=="no") and (highest_sentiment_car['type']=="no") and (highest_sentiment_car['transmission']=="no"):
+            if (row['L']=="no") and (row['cyl']=="no") and (row['type']=="no") and (row['transmission']=="no"):
                 # Create a DataFrame to display car details in table format
                 car_details = {
                     "Car Year": [row['Car_Year']],
@@ -376,14 +376,14 @@ elif option == "I need top 5 recommendations":
             else:
                  # Create a DataFrame to display car details in table format
                  car_details = {
-                     "Car Year": [highest_sentiment_car['Car_Year']],
-                     "Car Brand": [highest_sentiment_car['Car_Brand']],
-                     "Car Name": [highest_sentiment_car['Car_Name']],
-                     "Engine": [highest_sentiment_car['L']],
-                     "Cylinders": [highest_sentiment_car['cyl']],
-                     "Type": [highest_sentiment_car['type']],
-                     "Transmission": [highest_sentiment_car['transmission']],
-                     "Price": [highest_sentiment_car['Price']]
+                     "Car Year": ['Car_Year'],
+                     "Car Brand": ['Car_Brand'],
+                     "Car Name": ['Car_Name'],
+                     "Engine": ['L'],
+                     "Cylinders": ['cyl'],
+                     "Type": ['type'],
+                     "Transmission": ['transmission'],
+                     "Price": ['Price']
                  }
                 
                  # Convert the dictionary to a DataFrame
