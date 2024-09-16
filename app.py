@@ -184,7 +184,7 @@ df_reviews['vader_ss'] = df_reviews['reviews_cleaned'].apply(get_sentiment)
 df_reviews['vader_ss_normalize'] = df_reviews['vader_ss'].apply(lambda x: 1 if x >= 0 else 0)
 
 # Sidebar for manual or automatic input
-option = st.sidebar.radio("Select Input Method", ("Manual Input", "Select from Options"))
+#option = st.sidebar.radio("Select Input Method", ("Manual Input", "Select from Options"))
 
 # Define a function to extract brand, price range, and other features from user input
 def extract_car_features(input_text):
