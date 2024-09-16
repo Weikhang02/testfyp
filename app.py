@@ -212,6 +212,7 @@ def extract_car_features(input_text):
 
 df_reviews['Price'] = df_reviews['Price'].fillna(0)
 st.write(calcMissingRowCount(df_reviews['Price']))
+# Modify the manual input option to include car features and logic for filtering or showing top 5 cars
 if option == "Manual Input":
     user_input = st.text_input("Describe your ideal car (e.g., safe, comfortable, etc.):")
     
@@ -224,9 +225,7 @@ if option == "Manual Input":
         
         # Filter the dataset based on the extracted car features
         filtered_df = df_reviews.copy()
-        
         if car_features['Car_Brand']:
-            # Replace NaN values with an empty string before using str.contains()
             filtered_df = filtered_df[filtered_df['Car_Brand'].fillna('').str.contains(car_features['Car_Brand'], case=False)]
         if car_features['Price_Min'] and car_features['Price_Max']:
             filtered_df = filtered_df[(filtered_df['Price'] >= car_features['Price_Min']) & (filtered_df['Price'] <= car_features['Price_Max'])]
@@ -239,42 +238,46 @@ if option == "Manual Input":
         if car_features['transmission']:
             filtered_df = filtered_df[filtered_df['transmission'].fillna('').str.contains(car_features['transmission'], case=False)]
         
-        # Display filtered cars
+        # If specific features are provided, find the car with the highest sentiment score
         if not filtered_df.empty:
-            st.write("Cars matching your criteria:")
-            for index, row in filtered_df.iterrows():
-                # Check if the "L", "cyl", "type", and "transmission" fields are None or empty
+            # Calculate sentiment score and sort by highest score
+            filtered_df['sentiment_score'] = filtered_df['vader_ss']
+            highest_sentiment_car = filtered_df.loc[filtered_df['sentiment_score'].idxmax()]
+
+            # Display the car with the highest sentiment score
+            st.write("Car matching your criteria with the highest sentiment score:")
+            if (highest_sentiment_car['L']=="no") and (highest_sentiment_car['cyl']=="no") and (highest_sentiment_car['type']=="no") and (highest_sentiment_car['transmission']=="no"):
+                st.write(f"**{highest_sentiment_car['Car_Year']} {highest_sentiment_car['Car_Brand']} {highest_sentiment_car['Car_Name']} (Electric Drive: {highest_sentiment_car['electric_DD']})**  - {highest_sentiment_car['Price']}")
+            else:
+                st.write(f"**{highest_sentiment_car['Car_Year']} {highest_sentiment_car['Car_Brand']} {highest_sentiment_car['Car_Name']} ({highest_sentiment_car['L']}, {highest_sentiment_car['cyl']}, {highest_sentiment_car['type']}, {highest_sentiment_car['transmission']})**  - {highest_sentiment_car['Price']}")
+        
+        # If not all features are provided or the filtered dataframe is empty, rank the top 5 cars based on word class occurrence
+        else:
+            st.write("No car matches your exact criteria. Showing top 5 cars based on word class occurrence:")
+            
+            # Proceed with word class classification
+            classified_class, class_counts = classify_user_input(user_input, word_classes)
+            st.write(f"Your input suggests you are looking for a car with a focus on **{classified_class}**.")
+            
+            # Calculate class counts for each car
+            class_counts_df = get_class_counts_by_car(df_reviews, word_classes)
+            
+            # Rank cars based on user-selected category
+            top_5_cars = rank_cars_by_category(class_counts_df, classified_class, top_n=5)
+            
+            # Match top 5 cars by car name to retrieve the relevant details
+            top_5_car_details = df_reviews[df_reviews['Car_Name'].isin(top_5_cars.index)]
+            
+            # Remove duplicate entries by keeping the first occurrence of each car name
+            top_5_car_details = top_5_car_details.drop_duplicates(subset=['Car_Name'], keep='first')
+            
+            st.write("Here are the top 5 cars matching your preferences based on sentiment analysis:")
+            for index, row in top_5_car_details.iterrows():
                 if (row['L']=="no") and (row['cyl']=="no") and (row['type']=="no") and (row['transmission']=="no"):
-                    # If all are None, only print electric_DD
                     st.write(f"**{row['Car_Year']} {row['Car_Brand']} {row['Car_Name']} (Electric Drive: {row['electric_DD']})**  - {row['Price']}")
                 else:
-                    # Otherwise, print the full set of details
                     st.write(f"**{row['Car_Year']} {row['Car_Brand']} {row['Car_Name']} ({row['L']}, {row['cyl']}, {row['type']}, {row['transmission']})**  - {row['Price']}")
 
-        # Proceed with word class classification
-        classified_class, class_counts = classify_user_input(user_input, word_classes)
-        st.write(f"Your input suggests you are looking for a car with a focus on **{classified_class}**.")
-        
-        # Calculate class counts for each car
-        class_counts_df = get_class_counts_by_car(df_reviews, word_classes)
-        
-        # Rank cars based on user-selected category
-        top_5_cars = rank_cars_by_category(class_counts_df, classified_class, top_n=5)
-        
-        # Match top 5 cars by car name to retrieve the relevant details
-        top_5_car_details = df_reviews[df_reviews['Car_Name'].isin(top_5_cars.index)]
-        
-        # Remove duplicate entries by keeping the first occurrence of each car name
-        top_5_car_details = top_5_car_details.drop_duplicates(subset=['Car_Name'], keep='first')
-        
-        st.write("Here are the top 5 cars matching your preferences based on sentiment analysis:")
-        for index, row in top_5_car_details.iterrows():
-            if (row['L']=="no") and (row['cyl']=="no") and (row['type']=="no") and (row['transmission']=="no"):
-                # If all are None, only print electric_DD
-                st.write(f"**{row['Car_Year']} {row['Car_Brand']} {row['Car_Name']} (Electric Drive: {row['electric_DD']})**  - {row['Price']}")
-            else:
-                # Otherwise, print the full set of details
-                st.write(f"**{row['Car_Year']} {row['Car_Brand']} {row['Car_Name']} ({row['L']}, {row['cyl']}, {row['type']}, {row['transmission']})**  - {row['Price']}")
 # Option to select from car features in the sidebar
 else:
     st.sidebar.write("Select your car preferences:")
