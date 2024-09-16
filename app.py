@@ -210,7 +210,7 @@ def get_car_image(car_name):
     file_name = car_name.replace(' ', '_') + ".jpg"
     
     # Define the base path to your images (this should point to your GitHub repo or local folder)
-    image_base_url = "https://github.com/Weikhang02/your_repo_name/raw/main/Car%20Image/"  # Adjust the path and repo name
+    image_base_url = "https://github.com/Weikhang02/tryfyp/raw/main/Car%20Image/"  # Adjust the path and repo name
     
     # Construct the image URL
     image_url = os.path.join(image_base_url, file_name)
@@ -220,7 +220,7 @@ def get_car_image(car_name):
         return Image.open(image_url)
     except Exception:
         # If image not found, return a placeholder image
-        return Image.open("https://github.com/Weikhang02/your_repo_name/raw/main/Car%20Image/no_image_available.jpg")  # Add a "no_image_available.jpg" in the repo
+        return Image.open("https://github.com/Weikhang02/tryfyp/raw/main/Car%20Image/no_image_available.jpg")  # Add a "no_image_available.jpg" in the repo
 # Ensure 'Price' is numeric and handle any NaN values
 #df_reviews['Price'] = pd.to_numeric(df_reviews['Price'], errors='coerce')  # Convert Price to numeric, invalid parsing will be set as NaN
 
