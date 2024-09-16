@@ -204,7 +204,23 @@ def extract_car_features(input_text):
         'type': type_pattern.group(0) if type_pattern else None,
         'transmission': transmission_pattern.group(0) if transmission_pattern else None,
     }
+
+def get_car_image(car_name):
+    # Convert car name to a valid file name (replace spaces with underscores)
+    file_name = car_name.replace(' ', '_') + ".jpg"
     
+    # Define the base path to your images (this should point to your GitHub repo or local folder)
+    image_base_url = "https://github.com/Weikhang02/your_repo_name/raw/main/Car%20Image/"  # Adjust the path and repo name
+    
+    # Construct the image URL
+    image_url = os.path.join(image_base_url, file_name)
+    
+    try:
+        # Try to open the image from the URL
+        return Image.open(image_url)
+    except Exception:
+        # If image not found, return a placeholder image
+        return Image.open("https://github.com/Weikhang02/your_repo_name/raw/main/Car%20Image/no_image_available.jpg")  # Add a "no_image_available.jpg" in the repo
 # Ensure 'Price' is numeric and handle any NaN values
 #df_reviews['Price'] = pd.to_numeric(df_reviews['Price'], errors='coerce')  # Convert Price to numeric, invalid parsing will be set as NaN
 
@@ -213,6 +229,7 @@ def extract_car_features(input_text):
 df_reviews['Price'] = df_reviews['Price'].fillna(0)
 st.write(calcMissingRowCount(df_reviews['Price']))
 # Modify the manual input option to include car features and logic for filtering or showing top 5 cars
+# Sidebar for user input options: either "I know my preferences" or "I need recommendations"
 # Sidebar for user input options: either "I know my preferences" or "I need recommendations"
 option = st.sidebar.radio("Choose how you'd like to proceed:", 
                           ("I know my preferences", "I need top 5 recommendations"))
@@ -254,6 +271,14 @@ if option == "I know my preferences":
 
             # Display the car with the highest sentiment score
             st.write("Car matching your criteria with the highest sentiment score:")
+            
+            # Get the car name and retrieve the image
+            car_name = highest_sentiment_car['Car_Name']
+            car_image = get_car_image(car_name)
+            
+            # Display the image along with car details
+            st.image(car_image, caption=car_name, use_column_width=True)
+            
             if (highest_sentiment_car['L']=="no") and (highest_sentiment_car['cyl']=="no") and (highest_sentiment_car['type']=="no") and (highest_sentiment_car['transmission']=="no"):
                 st.write(f"**{highest_sentiment_car['Car_Year']} {highest_sentiment_car['Car_Brand']} {highest_sentiment_car['Car_Name']} (Electric Drive: {highest_sentiment_car['electric_DD']})**  - {highest_sentiment_car['Price']}")
             else:
@@ -291,6 +316,13 @@ elif option == "I need top 5 recommendations":
         # Display the top 5 cars
         st.write(f"Here are the top 5 cars based on **{category}**:")
         for index, row in top_5_car_details.iterrows():
+            # Get the car name and retrieve the image
+            car_name = row['Car_Name']
+            car_image = get_car_image(car_name)
+            
+            # Display the image along with car details
+            st.image(car_image, caption=car_name, use_column_width=True)
+            
             if (row['L']=="no") and (row['cyl']=="no") and (row['type']=="no") and (row['transmission']=="no"):
                 st.write(f"**{row['Car_Year']} {row['Car_Brand']} {row['Car_Name']} (Electric Drive: {row['electric_DD']})**  - {row['Price']}")
             else:
