@@ -79,7 +79,7 @@ def extract_year_brand_name(title):
     if isinstance(title, str):
         year = re.search(r'^\d{4}', title).group(0) if re.search(r'^\d{4}', title) else None
         brand = re.search(r'^\d{4}\s+(\w+)', title).group(1) if re.search(r'^\d{4}\s+(\w+)', title) else None
-        car_name = re.search(r'^\d{4}\s+\w+\s+(.*)', title).group(1).strip() if re.search(r'^\d{4}\s+\w+\s+(.*)', title) else None
+        car_name = re.search(r'^\d{4}\s+\w+\s+([^\(]+)', title).group(1).strip() if re.search(r'^\d{4}\s+\w+\s+([^\(]+)', title) else None
         return year, brand, car_name
     else:
         return None, None, None
@@ -201,6 +201,10 @@ def extract_car_features(input_text):
         'type': type_pattern.group(0) if type_pattern else None,
         'transmission': transmission_pattern.group(0) if transmission_pattern else None,
     }
+    
+# Ensure 'Price' is numeric and handle any NaN values
+df_reviews['Price'] = pd.to_numeric(df_reviews['Price'], errors='coerce')  # Convert Price to numeric, invalid parsing will be set as NaN
+df_reviews['Price'] = df_reviews['Price'].fillna(0)  # Replace NaN values with 0 or any default value you prefer
 
 # Modify the manual input option to include car features
 if option == "Manual Input":
