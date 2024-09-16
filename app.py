@@ -376,14 +376,14 @@ elif option == "I need top 5 recommendations":
             else:
                  # Create a DataFrame to display car details in table format
                  car_details = {
-                     "Car Year": ['Car_Year'],
-                     "Car Brand": ['Car_Brand'],
-                     "Car Name": ['Car_Name'],
-                     "Engine": ['L'],
-                     "Cylinders": ['cyl'],
-                     "Type": ['type'],
-                     "Transmission": ['transmission'],
-                     "Price": ['Price']
+                     "Car Year": [row['Car_Year']],
+                     "Car Brand": [row['Car_Brand']],
+                     "Car Name": [row['Car_Name']],
+                     "Engine": [row['L']],
+                     "Cylinders": [row['cyl']],
+                     "Type": [row['type']],
+                     "Transmission": [row['transmission']],
+                     "Price": [row['Price']]
                  }
                 
                  # Convert the dictionary to a DataFrame
