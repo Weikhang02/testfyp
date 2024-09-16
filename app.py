@@ -9,8 +9,9 @@ import nltk
 nltk.download('stopwords')
 from nltk.corpus import stopwords
 import matplotlib.pyplot as plt
-#from PIL import Image
+from PIL import Image
 import os
+import base64 
 
 # Download nltk resources
 nltk.download('punkt')
