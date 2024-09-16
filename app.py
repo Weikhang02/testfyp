@@ -324,7 +324,7 @@ elif option == "I need top 5 recommendations":
         st.write(f"Here are the top 5 cars based on **{category}**:")
         for index, row in top_5_car_details.iterrows():
             # Get the car name and retrieve the image
-            car_name = highest_sentiment_car['Car_Name']
+            # car_name = highest_sentiment_car['Car_Name']
             car_image_path = get_car_image(car_name)
             
             # Display the image along with car details
