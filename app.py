@@ -212,7 +212,7 @@ def get_car_image(car_name):
     #file_name = car_name.replace(" " , "_") + ".jpg"
     file_name="Caliber_SRT4_SRT4_4dr_Wagon.jpg"
     # Define the base path to your local images folder
-    image_base_path = "./Car Image"  # Adjust the path as needed
+    image_base_path = "./testfyp/Car Image"  # Adjust the path as needed
     
     # Construct the full local image path
     image_path = os.path.join(image_base_path, file_name)
