@@ -165,8 +165,8 @@ def calcMissingRowCount(df):
 st.title("Sentiment Based Car Recommendation System")
 
 # Load the dataset
-df_reviews = load_data()
-df_reviews= df_reviews.dropna()
+df = load_data()
+df_reviews= df.dropna()
 # Extract car year, brand, and name
 df_reviews[['Car_Year', 'Car_Brand', 'Car_Name']] = df_reviews['Vehicle_Title'].apply(lambda x: pd.Series(extract_year_brand_name(x)))
 
