@@ -217,17 +217,18 @@ if option == "Manual Input":
         filtered_df = df_reviews.copy()
         
         if car_features['Car_Brand']:
-            filtered_df = filtered_df[filtered_df['Car_Brand'].str.contains(car_features['Car_Brand'], case=False)]
+            # Replace NaN values with an empty string before using str.contains()
+            filtered_df = filtered_df[filtered_df['Car_Brand'].fillna('').str.contains(car_features['Car_Brand'], case=False)]
         if car_features['Price_Min'] and car_features['Price_Max']:
             filtered_df = filtered_df[(filtered_df['Price'] >= car_features['Price_Min']) & (filtered_df['Price'] <= car_features['Price_Max'])]
         if car_features['L']:
-            filtered_df = filtered_df[filtered_df['L'].str.contains(car_features['L'], case=False)]
+            filtered_df = filtered_df[filtered_df['L'].fillna('').str.contains(car_features['L'], case=False)]
         if car_features['cyl']:
-            filtered_df = filtered_df[filtered_df['cyl'].str.contains(car_features['cyl'], case=False)]
+            filtered_df = filtered_df[filtered_df['cyl'].fillna('').str.contains(car_features['cyl'], case=False)]
         if car_features['type']:
-            filtered_df = filtered_df[filtered_df['type'].str.contains(car_features['type'], case=False)]
+            filtered_df = filtered_df[filtered_df['type'].fillna('').str.contains(car_features['type'], case=False)]
         if car_features['transmission']:
-            filtered_df = filtered_df[filtered_df['transmission'].str.contains(car_features['transmission'], case=False)]
+            filtered_df = filtered_df[filtered_df['transmission'].fillna('').str.contains(car_features['transmission'], case=False)]
         
         # Display filtered cars
         if not filtered_df.empty:
