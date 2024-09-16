@@ -210,8 +210,8 @@ def extract_car_features(input_text):
 
 def get_car_image(car_name):
     # Convert car name to a valid file name (replace spaces with underscores)
-    #file_name = car_name.replace(" " , "_") + ".jpg"
-    file_name="Caliber_SRT4_SRT4_4dr_Wagon.jpg"
+    file_name = car_name + ".jpg"
+    #file_name="Caliber_SRT4_SRT4_4dr_Wagon.jpg"
     # Define the base path to your local images folder
     image_base_path = "./image"  # Adjust the path as needed
     
