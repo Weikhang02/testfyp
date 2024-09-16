@@ -325,7 +325,8 @@ elif option == "I need top 5 recommendations":
         for index, row in top_5_car_details.iterrows():
             # Get the car name and retrieve the image
             # car_name = highest_sentiment_car['Car_Name']
-            car_image_path = get_car_image(car_name)
+            # car_image_path = get_car_image(car_name)
+            car_image_path = get_car_image(['Car_Name'])
             
             # Display the image along with car details
             st.image(car_image_path, caption=car_name, use_column_width=True)
