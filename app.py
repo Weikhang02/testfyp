@@ -188,7 +188,7 @@ option = st.sidebar.radio("Select Input Method", ("Manual Input", "Select from O
 
 # Define a function to extract brand, price range, and other features from user input
 def extract_car_features(input_text):
-    brand_pattern = re.search(r'\b(Dodge|FIAT|Ford|HUMMER|Hyundai|INFINITI|Jaguar|Kia|Lamborghini|Land Rover|Lexus|BMW|Audi|Porsche|Volkswagen|Toyota|Honda|Tesla|Bentley|GMC|Ford)\b', input_text, re.IGNORECASE)
+    brand_pattern = re.search(r'\b(Dodge|FIAT|Ford|HUMMER|Hyundai|INFINITI|Jaguar|Kia|Lamborghini|Lexus|BMW|Audi|Porsche|Volkswagen|Toyota|Honda|Tesla|Bentley|GMC|Ford)\b', input_text, re.IGNORECASE)
     price_pattern = re.search(r'price range of (\d+)-(\d+)', input_text)
     engine_pattern = re.search(r'(\d\.\d)L', input_text)
     cyl_pattern = re.search(r'(\d)cyl', input_text)
