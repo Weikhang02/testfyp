@@ -209,7 +209,8 @@ def extract_car_features(input_text):
 
 def get_car_image(car_name):
     # Convert car name to a valid file name (replace spaces with underscores)
-    file_name = car_name.replace(" " , "_") + ".jpg"
+    #file_name = car_name.replace(" " , "_") + ".jpg"
+    file_name="Caliber_SRT4_SRT4_4dr_Wagon.jpg"
     # Define the base path to your local images folder
     image_base_path = "./Car Image"  # Adjust the path as needed
     
@@ -283,12 +284,12 @@ if option == "I know my preferences":
             car_image_path = get_car_image(car_name)
             
             # Check if the image is valid before displaying
-            if car_image_path is not None:
-                st.image(car_image_path, caption=car_name, use_column_width=True)
-            else:
-                st.write("Image could not be loaded.")
+            #if car_image_path is not None:
+            #    st.image(car_image_path, caption=car_name, use_column_width=True)
+            #else:
+            #    st.write("Image could not be loaded.")
             # Display the image along with car details
-            #st.image(car_image_path, caption=car_name, use_column_width=True)
+            st.image(car_image_path, caption=car_name, use_column_width=True)
 
             if (highest_sentiment_car['L']=="no") and (highest_sentiment_car['cyl']=="no") and (highest_sentiment_car['type']=="no") and (highest_sentiment_car['transmission']=="no"):
                 # Create a DataFrame to display car details in table format
