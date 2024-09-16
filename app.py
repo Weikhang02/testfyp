@@ -281,9 +281,9 @@ if option == "I know my preferences":
             
             # Get the car name and retrieve the image
             car_name = highest_sentiment_car['Car_Name']
-            st.write("Car matching your criteria with the highest sentiment score:2222")
+            st.write(car_name)
             car_image_path = get_car_image(car_name)
-            
+            st.write(car_image_path)
             # Check if the image is valid before displaying
             #if car_image_path is not None:
                 #st.image(car_image_path, caption=car_name, use_column_width=True)
