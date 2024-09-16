@@ -157,6 +157,9 @@ def get_class_counts_by_car(df, word_classes):
 def rank_cars_by_category(class_counts_df, category, top_n=5):
     ranked_cars = class_counts_df[category].sort_values(ascending=False).head(top_n)
     return ranked_cars
+def calcMissingRowCount(df):
+    # summing up the missing values (column-wise) and displaying fraction of NaNs
+    return df.isnull().sum()
 
 # UI Components
 st.title("Sentiment Based Car Recommendation System")
@@ -207,6 +210,7 @@ def extract_car_features(input_text):
 #df_reviews['Price'] = df_reviews['Price'].fillna(0)  # Replace NaN values with 0 or any default value you prefer
 
 # Modify the manual input option to include car features
+st.write(calcMissingRowCount(df_reviews['Price'])
 if option == "Manual Input":
     user_input = st.text_input("Describe your ideal car (e.g., safe, comfortable, etc.):")
     
