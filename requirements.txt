@@ -3,3 +3,4 @@ pandas
 nltk==3.8.1
 vaderSentiment
 matplotlib
+Pillow
