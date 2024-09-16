@@ -207,9 +207,10 @@ def extract_car_features(input_text):
     
 # Ensure 'Price' is numeric and handle any NaN values
 #df_reviews['Price'] = pd.to_numeric(df_reviews['Price'], errors='coerce')  # Convert Price to numeric, invalid parsing will be set as NaN
-#df_reviews['Price'] = df_reviews['Price'].fillna(0)  # Replace NaN values with 0 or any default value you prefer
 
 # Modify the manual input option to include car features
+
+df_reviews['Price'] = df_reviews['Price'].fillna(0)
 st.write(calcMissingRowCount(df_reviews['Price']))
 if option == "Manual Input":
     user_input = st.text_input("Describe your ideal car (e.g., safe, comfortable, etc.):")
