@@ -93,10 +93,10 @@ def categorize_components_safe(car_model):
         
         if stripped_model == 'electric DD':
             categorized['electric_DD'] = 'electric DD'
-            categorized['L'] = 'not'
-            categorized['cyl'] = 'not'
-            categorized['type'] = 'not'
-            categorized['transmission'] = 'not'
+            categorized['L'] = 'no'
+            categorized['cyl'] = 'no'
+            categorized['type'] = 'no'
+            categorized['transmission'] = 'no'
         elif len(components) >= 4:
             categorized['L'] = components[0]
             categorized['cyl'] = components[1]
@@ -235,10 +235,18 @@ if option == "Manual Input":
             filtered_df = filtered_df[filtered_df['transmission'].fillna('').str.contains(car_features['transmission'], case=False)]
         
         # Display filtered cars
-        if not filtered_df.empty:
-            st.write("Cars matching your criteria:")
-            for index, row in filtered_df.iterrows():
+        # Display filtered cars
+    if not filtered_df.empty:
+        st.write("Cars matching your criteria:")
+        for index, row in filtered_df.iterrows():
+            # Check if the "L", "cyl", "type", and "transmission" fields are None or empty
+            if (row['L']=="no") and (row['cyl']=="no") and (row['type']=="no") and (row['transmission']=="no"):
+                # If all are None, only print electric_DD
+                st.write(f"**{row['Car_Year']} {row['Car_Brand']} {row['Car_Name']} (Electric Drive: {row['electric_DD']})**  - {row['Price']}")
+            else:
+                # Otherwise, print the full set of details
                 st.write(f"**{row['Car_Year']} {row['Car_Brand']} {row['Car_Name']} ({row['L']}, {row['cyl']}, {row['type']}, {row['transmission']})**  - {row['Price']}")
+
         
         # Proceed with word class classification
         classified_class, class_counts = classify_user_input(user_input, word_classes)
