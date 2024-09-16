@@ -228,6 +228,14 @@ def get_car_image(car_name):
         st.write(f"Error loading image: {e}")
         return os.path.join(image_base_path, "no image available.jpg")
 
+def image_to_base64(image_path):
+    if os.path.exists(image_path):
+        with open(image_path, "rb") as image_file:
+            encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
+        return f"data:image/jpeg;base64,{encoded_string}"
+    else:
+        return None
+        
 # Ensure 'Price' is numeric and handle any NaN values
 #df_reviews['Price'] = pd.to_numeric(df_reviews['Price'], errors='coerce')  # Convert Price to numeric, invalid parsing will be set as NaN
 
@@ -284,13 +292,14 @@ if option == "I know my preferences":
             st.write(car_name)
             car_image_path = get_car_image(car_name)
             st.write(car_image_path)
-            # Check if the image is valid before displaying
-            #if car_image_path is not None:
-                #st.image(car_image_path, caption=car_name, use_column_width=True)
-            #else:
-                #st.write("Image could not be loaded.")
             # Display the image along with car details
-            st.image(car_image_path, caption=car_name)
+            #st.image(car_image_path, caption=car_name)
+            # In your logic to display the image:
+            image_base64 = image_to_base64(car_image_path)
+            if image_base64:
+                st.markdown(f"<img src='{image_base64}' style='width:100%' />", unsafe_allow_html=True)
+            else:
+                st.write("Image could not be loaded.")
 
             if (highest_sentiment_car['L']=="no") and (highest_sentiment_car['cyl']=="no") and (highest_sentiment_car['type']=="no") and (highest_sentiment_car['transmission']=="no"):
                 # Create a DataFrame to display car details in table format
