@@ -290,12 +290,9 @@ if option == "I know my preferences":
             
             # Get the car name and retrieve the image
             car_name = highest_sentiment_car['Car_Name']
-            st.write(car_name)
             car_image_path = get_car_image(car_name)
-            st.write(car_image_path)
             # Display the image along with car details
             #st.image(car_image_path, caption=car_name)
-            # In your logic to display the image:
             image_base64 = image_to_base64(car_image_path)
             if image_base64:
                 st.markdown(f"<img src='{image_base64}' style='width:100%' />", unsafe_allow_html=True)
