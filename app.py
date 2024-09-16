@@ -314,11 +314,11 @@ if option == "I know my preferences":
                      "Price": [highest_sentiment_car['Price']]
                  }
                 
-                # Convert the dictionary to a DataFrame
-                car_details_df = pd.DataFrame(car_details)
+                 # Convert the dictionary to a DataFrame
+                 car_details_df = pd.DataFrame(car_details)
 
-                # Display the DataFrame as a table
-                st.table(car_details_df)
+                 # Display the DataFrame as a table
+                 st.table(car_details_df)
         # If no cars match the features, provide a fallback message
         else:
             st.write("No cars found matching your exact preferences.")
@@ -387,8 +387,8 @@ elif option == "I need top 5 recommendations":
                      "Price": [highest_sentiment_car['Price']]
                  }
                 
-                # Convert the dictionary to a DataFrame
-                car_details_df = pd.DataFrame(car_details)
+                 # Convert the dictionary to a DataFrame
+                 car_details_df = pd.DataFrame(car_details)
 
-                # Display the DataFrame as a table
-                st.table(car_details_df)
+                 # Display the DataFrame as a table
+                 st.table(car_details_df)
