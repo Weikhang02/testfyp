@@ -292,7 +292,6 @@ if option == "I know my preferences":
             car_name = highest_sentiment_car['Car_Name']
             car_image_path = get_car_image(car_name)
             # Display the image along with car details
-            #st.image(car_image_path, caption=car_name)
             image_base64 = image_to_base64(car_image_path)
             if image_base64:
                 st.markdown(f"<img src='{image_base64}' style='width:100%' />", unsafe_allow_html=True)
@@ -370,7 +369,11 @@ elif option == "I need top 5 recommendations":
             car_image_path = get_car_image(car_name)
             
             # Display the image along with car details
-            st.image(car_image_path, caption=car_name, use_column_width=True)
+            image_base64 = image_to_base64(car_image_path)
+            if image_base64:
+                st.markdown(f"<img src='{image_base64}' style='width:100%' />", unsafe_allow_html=True)
+            else:
+                st.write("Image could not be loaded.")
 
             if (row['L']=="no") and (row['cyl']=="no") and (row['type']=="no") and (row['transmission']=="no"):
                 # Create a DataFrame to display car details in table format
