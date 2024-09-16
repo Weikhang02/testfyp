@@ -214,7 +214,7 @@ if option == "Manual Input":
         st.write(f"Extracted Car Features: {car_features}")
         
         # Filter the dataset based on the extracted car features
-        filtered_df = df_clean.copy()
+        filtered_df = df_reviews.copy()
         
         if car_features['Car_Brand']:
             filtered_df = filtered_df[filtered_df['Car_Brand'].str.contains(car_features['Car_Brand'], case=False)]
