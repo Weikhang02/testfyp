@@ -227,7 +227,7 @@ def get_car_image(car_name):
 # Modify the manual input option to include car features
 
 df_reviews['Price'] = df_reviews['Price'].fillna(0)
-st.write(calcMissingRowCount(df_reviews['Price']))
+# st.write(calcMissingRowCount(df_reviews['Price']))
 # Modify the manual input option to include car features and logic for filtering or showing top 5 cars
 # Sidebar for user input options: either "I know my preferences" or "I need recommendations"
 # Sidebar for user input options: either "I know my preferences" or "I need recommendations"
