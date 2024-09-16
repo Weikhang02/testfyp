@@ -210,7 +210,7 @@ def extract_car_features(input_text):
 #df_reviews['Price'] = df_reviews['Price'].fillna(0)  # Replace NaN values with 0 or any default value you prefer
 
 # Modify the manual input option to include car features
-st.write(calcMissingRowCount(df_reviews['Price'])
+st.write(calcMissingRowCount(df_reviews['Price']))
 if option == "Manual Input":
     user_input = st.text_input("Describe your ideal car (e.g., safe, comfortable, etc.):")
     
