@@ -281,10 +281,10 @@ if option == "I know my preferences":
             
             # Get the car name and retrieve the image
             car_name = highest_sentiment_car['Car_Name']
-            car_image = get_car_image(car_name)
+            car_image_path = get_car_image(car_name)
             
             # Display the image along with car details
-            st.image(car_image, caption=car_name, use_column_width=True)
+            st.image(car_image_path, caption=car_name, use_column_width=True)
             
             if (highest_sentiment_car['L']=="no") and (highest_sentiment_car['cyl']=="no") and (highest_sentiment_car['type']=="no") and (highest_sentiment_car['transmission']=="no"):
                 st.write(f"**{highest_sentiment_car['Car_Year']} {highest_sentiment_car['Car_Brand']} {highest_sentiment_car['Car_Name']} (Electric Drive: {highest_sentiment_car['electric_DD']})**  - {highest_sentiment_car['Price']}")
@@ -324,11 +324,11 @@ elif option == "I need top 5 recommendations":
         st.write(f"Here are the top 5 cars based on **{category}**:")
         for index, row in top_5_car_details.iterrows():
             # Get the car name and retrieve the image
-            car_name = row['Car_Name']
-            car_image = get_car_image(car_name)
+            car_name = highest_sentiment_car['Car_Name']
+            car_image_path = get_car_image(car_name)
             
             # Display the image along with car details
-            st.image(car_image, caption=car_name, use_column_width=True)
+            st.image(car_image_path, caption=car_name, use_column_width=True)
             
             if (row['L']=="no") and (row['cyl']=="no") and (row['type']=="no") and (row['transmission']=="no"):
                 st.write(f"**{row['Car_Year']} {row['Car_Brand']} {row['Car_Name']} (Electric Drive: {row['electric_DD']})**  - {row['Price']}")
