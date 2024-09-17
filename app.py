@@ -326,8 +326,8 @@ if option == "I know specific preferences":
                     car_details_df = pd.DataFrame(car_details)
                     st.table(car_details_df)
                 else:
-                     # Create a DataFrame to display car details in table format
-                     car_details = {
+                    # Create a DataFrame to display car details in table format
+                    car_details = {
                         "Car Year": [highest_sentiment_car['Car_Year']],
                         "Car Brand": [highest_sentiment_car['Car_Brand']],
                         "Car Name": [highest_sentiment_car['Car_Name']],
@@ -336,13 +336,13 @@ if option == "I know specific preferences":
                         "Type": [highest_sentiment_car['type']],
                         "Transmission": [highest_sentiment_car['transmission']],
                         "Price ($)": [highest_sentiment_car['Price']]
-                      }
+                    }
                     
-                      # Convert the dictionary to a DataFrame
-                      car_details_df = pd.DataFrame(car_details)
+                    # Convert the dictionary to a DataFrame
+                    car_details_df = pd.DataFrame(car_details)
     
-                      # Display the DataFrame as a table
-                      st.table(car_details_df)
+                    # Display the DataFrame as a table
+                    st.table(car_details_df)
             else:
                 st.write("No cars found matching your exact preferences.")
         
