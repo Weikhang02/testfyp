@@ -262,9 +262,9 @@ option = st.sidebar.radio("Choose how you'd like to proceed:",
 if option == "I know my preferences":
     st.write("Please specify your car preferences below:")
     
+    st.write("Example: I want a Ford car which the name is Mustang Coupe EcoBoost Premium 2dr Coupe and it is Turbo and the transmission is 6M")
     # Let the user describe their ideal car
     user_input = st.text_input("Describe your ideal car (e.g., brand, price range of (xxx to xxx), L, cyl, type or transmission):")
-    st.write("Example: I want a Ford car which the name is Mustang Coupe EcoBoost Premium 2dr Coupe and it is Turbo and the transmission is 6M")
     if user_input:
         # Extract car features from user input
         car_features = extract_car_features(user_input, df_reviews)
@@ -334,9 +334,9 @@ if option == "I know my preferences":
 elif option == "I need recommend":
     st.write("We will show you the Top 5 recommended cars based on sentiment analysis.")
     
+    st.write("Example: The car should economy and the cost not too high / I want the car is safety and the protection is in good condition")
     # Let the user specify if they are looking for any particular feature, if desired (optional)
     user_input = st.text_input("If you have any overall preferences (e.g., comfort, performance, safety, design, economy), enter them here:")
-    st.write("Example: The car should economy and the cost not too high / I want the car is safety and the protection is in good condition")
     
     if user_input:
         # Proceed with word class classification if the user enters preferences
