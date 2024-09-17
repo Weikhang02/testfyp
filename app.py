@@ -320,7 +320,7 @@ if option == "I know specific preferences":
                         "Car Brand": [highest_sentiment_car['Car_Brand']],
                         "Car Name": [highest_sentiment_car['Car_Name']],
                         "Electric Drive": [highest_sentiment_car['electric_DD']],
-                        "Price($)": [highest_sentiment_car['Price']]
+                        "Price ($)": [highest_sentiment_car['Price']]
                      }
                     
                      car_details_df = pd.DataFrame(car_details)
@@ -335,7 +335,7 @@ if option == "I know specific preferences":
                         "Cylinders": [highest_sentiment_car['cyl']],
                         "Type": [highest_sentiment_car['type']],
                         "Transmission": [highest_sentiment_car['transmission']],
-                        "Price($)": [highest_sentiment_car['Price']]
+                        "Price ($)": [highest_sentiment_car['Price']]
                       }
                     
                       # Convert the dictionary to a DataFrame
@@ -394,7 +394,7 @@ elif option == "I need recommend":
                     "Car Brand": [row['Car_Brand']],
                     "Car Name": [row['Car_Name']],
                     "Electric Drive": [row['electric_DD']],
-                    "Price($)": [row['Price']]
+                    "Price ($)": [row['Price']]
                 }
             
                 # Convert the dictionary to a DataFrame
@@ -412,7 +412,7 @@ elif option == "I need recommend":
                      "Cylinders": [row['cyl']],
                      "Type": [row['type']],
                      "Transmission": [row['transmission']],
-                     "Price($)": [row['Price']]
+                     "Price ($)": [row['Price']]
                  }
                 
                  # Convert the dictionary to a DataFrame
