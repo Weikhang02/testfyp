@@ -321,10 +321,10 @@ if option == "I know specific preferences":
                         "Car Name": [highest_sentiment_car['Car_Name']],
                         "Electric Drive": [highest_sentiment_car['electric_DD']],
                         "Price ($)": [highest_sentiment_car['Price']]
-                     }
+                    }
                     
-                     car_details_df = pd.DataFrame(car_details)
-                     st.table(car_details_df)
+                    car_details_df = pd.DataFrame(car_details)
+                    st.table(car_details_df)
                 else:
                      # Create a DataFrame to display car details in table format
                      car_details = {
