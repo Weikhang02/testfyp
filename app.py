@@ -202,7 +202,7 @@ def extract_car_features(input_text, df_reviews):
     # Check for a match with the car name in the dataset
     car_name_match = None
     for car_name in df_reviews['Car_Name'].unique():
-        if car_name.lower() in input_text.lower():
+        if isinstance(car_name, str) and car_name.lower() in input_text.lower():
             car_name_match = car_name
             break
 
