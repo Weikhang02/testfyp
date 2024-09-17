@@ -313,7 +313,7 @@ if option == "I know specific preferences":
                 else:
                     st.write("Image could not be loaded.")
                     
-                if (row['L']=="no") and (row['cyl']=="no") and (row['type']=="no") and (row['transmission']=="no"):
+                if (highest_sentiment_car['L']=="no") and (highest_sentiment_car['cyl']=="no") and (highest_sentiment_car['type']=="no") and (highest_sentiment_car['transmission']=="no"):
                     # Display car details in table format
                     car_details = {
                         "Car Year": [highest_sentiment_car['Car_Year']],
