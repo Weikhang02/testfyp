@@ -193,11 +193,11 @@ df_reviews['vader_ss_normalize'] = df_reviews['vader_ss'].apply(lambda x: 1 if x
 def extract_car_features(input_text, df_reviews):
     # Extract car brand, price, engine, etc.
     brand_pattern = re.search(r'\b(Dodge|FIAT|Ford|HUMMER|Hyundai|INFINITI|Jaguar|Kia|Lamborghini|Lexus|BMW|Audi|Porsche|Volkswagen|Toyota|Honda|Tesla|Bentley|GMC|Ford)\b', input_text, re.IGNORECASE)
-    price_pattern = re.search(r'price range of (\d+)-(\d+)', input_text)
+    price_pattern = re.search(r'price between (\d+)-(\d+)', input_text)
     engine_pattern = re.search(r'(\d\.\d)L', input_text)
     cyl_pattern = re.search(r'(\d)cyl', input_text)
-    type_pattern = re.search(r'(Turbo|gas/electric hybrid|S/C|Turbodiesel|)', input_text, re.IGNORECASE)
-    transmission_pattern = re.search(r'(6M|5M|Automatic|Manual|CVT|etc)', input_text, re.IGNORECASE)
+    type_pattern = re.search(r'(Turbo|gas/electric hybrid|S/C|Turbodiesel)', input_text, re.IGNORECASE)
+    transmission_pattern = re.search(r'(6M|5M|5A|6A|4A|8A|7A|9A|7AM|CVT)', input_text, re.IGNORECASE)
     
     # Check for a match with the car name in the dataset
     car_name_match = None
@@ -262,9 +262,9 @@ option = st.sidebar.radio("Choose how you'd like to proceed:",
 if option == "I know specific preferences":
     st.write("Please specify your car preferences below:")
     
-    st.write("Example: I want a Ford car which the name is Mustang Coupe EcoBoost Premium 2dr Coupe and it is Turbo and the transmission is 6M")
+    st.write("Example: I want a Ford car, Turbo and the transmission is 6M")
     # Let the user describe their ideal car
-    user_input = st.text_input("Describe your ideal car (e.g., brand, price range of (xxx to xxx), L, cyl, type or transmission):")
+    user_input = st.text_input("Describe your ideal car (e.g., brand, price between (xxx to xxx), Engine(in L), Cylinder(in cyl), Type or Transmission(M,A,AM):")
     if user_input:
         # Extract car features from user input
         car_features = extract_car_features(user_input, df_reviews)
