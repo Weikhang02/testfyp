@@ -256,10 +256,10 @@ df_reviews['Price'] = df_reviews['Price'].fillna(0)
 # Sidebar for user input options: either "I know my preferences" or "I need recommendations"
 # Sidebar for user input options: either "I know my preferences" or "I need recommendations"
 option = st.sidebar.radio("Choose how you'd like to proceed:", 
-                          ("I know my preferences", "I need top 5 recommendations"))
+                          ("I know specific preferences", "I need recommend"))
 
 # If the user knows their preferences
-if option == "I know my preferences":
+if option == "I know specific preferences":
     st.write("Please specify your car preferences below:")
     
     st.write("Example: I want a Ford car which the name is Mustang Coupe EcoBoost Premium 2dr Coupe and it is Turbo and the transmission is 6M")
