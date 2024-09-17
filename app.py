@@ -190,13 +190,21 @@ df_reviews['vader_ss_normalize'] = df_reviews['vader_ss'].apply(lambda x: 1 if x
 #option = st.sidebar.radio("Select Input Method", ("Manual Input", "Select from Options"))
 
 # Define a function to extract brand, price range, and other features from user input
-def extract_car_features(input_text):
+def extract_car_features(input_text, df_reviews):
+    # Extract car brand, price, engine, etc.
     brand_pattern = re.search(r'\b(Dodge|FIAT|Ford|HUMMER|Hyundai|INFINITI|Jaguar|Kia|Lamborghini|Lexus|BMW|Audi|Porsche|Volkswagen|Toyota|Honda|Tesla|Bentley|GMC|Ford)\b', input_text, re.IGNORECASE)
     price_pattern = re.search(r'price range of (\d+)-(\d+)', input_text)
     engine_pattern = re.search(r'(\d\.\d)L', input_text)
     cyl_pattern = re.search(r'(\d)cyl', input_text)
     type_pattern = re.search(r'(Turbo|Hybrid|Electric|Diesel|Petrol|etc)', input_text, re.IGNORECASE)
     transmission_pattern = re.search(r'(6M|5M|Automatic|Manual|CVT|etc)', input_text, re.IGNORECASE)
+    
+    # Check for a match with the car name in the dataset
+    car_name_match = None
+    for car_name in df_reviews['Car_Name'].unique():
+        if car_name.lower() in input_text.lower():
+            car_name_match = car_name
+            break
 
     return {
         'Car_Brand': brand_pattern.group(0) if brand_pattern else None,
@@ -206,8 +214,8 @@ def extract_car_features(input_text):
         'cyl': cyl_pattern.group(0) if cyl_pattern else None,
         'type': type_pattern.group(0) if type_pattern else None,
         'transmission': transmission_pattern.group(0) if transmission_pattern else None,
+        'Car_Name': car_name_match  # Added to capture car name from the input
     }
-
 def get_car_image(car_name):
     # Convert car name to a valid file name (replace spaces with underscores)
     file_name = car_name + ".jpg"
@@ -256,91 +264,79 @@ if option == "I know my preferences":
     
     # Let the user describe their ideal car
     user_input = st.text_input("Describe your ideal car (e.g., brand, price range of (xxx to xxx), L, cyl, type or transmission):")
-    
+    st.write("Example: I want a Ford car which the name is Mustang Coupe EcoBoost Premium 2dr Coupe and it is Turbo and the transmission is 6M")
     if user_input:
         # Extract car features from user input
-        car_features = extract_car_features(user_input)
+        car_features = extract_car_features(user_input, df_reviews)
         
-        # Show extracted features
-        st.write(f"Extracted Car Features: {car_features}")
-        
-        # Filter the dataset based on the extracted car features
-        filtered_df = df_reviews.copy()
-        if car_features['Car_Brand']:
-            filtered_df = filtered_df[filtered_df['Car_Brand'].fillna('').str.contains(car_features['Car_Brand'], case=False)]
-        if car_features['Price_Min'] and car_features['Price_Max']:
-            filtered_df = filtered_df[(filtered_df['Price'] >= car_features['Price_Min']) & (filtered_df['Price'] <= car_features['Price_Max'])]
-        if car_features['L']:
-            filtered_df = filtered_df[filtered_df['L'].fillna('').str.contains(car_features['L'], case=False)]
-        if car_features['cyl']:
-            filtered_df = filtered_df[filtered_df['cyl'].fillna('').str.contains(car_features['cyl'], case=False)]
-        if car_features['type']:
-            filtered_df = filtered_df[filtered_df['type'].fillna('').str.contains(car_features['type'], case=False)]
-        if car_features['transmission']:
-            filtered_df = filtered_df[filtered_df['transmission'].fillna('').str.contains(car_features['transmission'], case=False)]
-        
-        # If specific features are provided, find the car with the highest sentiment score
-        if not filtered_df.empty:
-            # Calculate sentiment score and sort by highest score
-            filtered_df['sentiment_score'] = filtered_df['vader_ss']
-            highest_sentiment_car = filtered_df.loc[filtered_df['sentiment_score'].idxmax()]
-
-            # Display the car with the highest sentiment score
-            st.write("Car matching your criteria with the highest sentiment score:")
+        # Check if all extracted features are None
+        if all(value is None for value in car_features.values()):
+            st.write("No cars found matching your exact preferences.")
+        else:
+            # Show extracted features
+            st.write(f"Extracted Car Features: {car_features}")
             
-            # Get the car name and retrieve the image
-            car_name = highest_sentiment_car['Car_Name']
-            car_image_path = get_car_image(car_name)
-            # Display the image along with car details
-            image_base64 = image_to_base64(car_image_path)
-            if image_base64:
-                st.markdown(f"<img src='{image_base64}' style='width:100%' />", unsafe_allow_html=True)
-            else:
-                st.write("Image could not be loaded.")
+            # Filter the dataset based on the extracted car features
+            filtered_df = df_reviews.copy()
+            if car_features['Car_Name']:
+                filtered_df = filtered_df[filtered_df['Car_Name'] == car_features['Car_Name']]
+            if car_features['Car_Brand']:
+                filtered_df = filtered_df[filtered_df['Car_Brand'].fillna('').str.contains(car_features['Car_Brand'], case=False)]
+            if car_features['Price_Min'] and car_features['Price_Max']:
+                filtered_df = filtered_df[(filtered_df['Price'] >= car_features['Price_Min']) & (filtered_df['Price'] <= car_features['Price_Max'])]
+            if car_features['L']:
+                filtered_df = filtered_df[filtered_df['L'].fillna('').str.contains(car_features['L'], case=False)]
+            if car_features['cyl']:
+                filtered_df = filtered_df[filtered_df['cyl'].fillna('').str.contains(car_features['cyl'], case=False)]
+            if car_features['type']:
+                filtered_df = filtered_df[filtered_df['type'].fillna('').str.contains(car_features['type'], case=False)]
+            if car_features['transmission']:
+                filtered_df = filtered_df[filtered_df['transmission'].fillna('').str.contains(car_features['transmission'], case=False)]
+            
+            # If specific features are provided, find the car with the highest sentiment score
+            if not filtered_df.empty:
+                # Calculate sentiment score and sort by highest score
+                filtered_df['sentiment_score'] = filtered_df['vader_ss']
+                highest_sentiment_car = filtered_df.loc[filtered_df['sentiment_score'].idxmax()]
 
-            if (highest_sentiment_car['L']=="no") and (highest_sentiment_car['cyl']=="no") and (highest_sentiment_car['type']=="no") and (highest_sentiment_car['transmission']=="no"):
-                # Create a DataFrame to display car details in table format
+                # Display the car with the highest sentiment score
+                st.write("Car matching your criteria with the highest sentiment score:")
+                
+                # Get the car name and retrieve the image
+                car_name = highest_sentiment_car['Car_Name']
+                car_image_path = get_car_image(car_name)
+                
+                # Display the image along with car details
+                image_base64 = image_to_base64(car_image_path)
+                if image_base64:
+                    st.markdown(f"<img src='{image_base64}' style='width:100%' />", unsafe_allow_html=True)
+                else:
+                    st.write("Image could not be loaded.")
+
+                # Display car details in table format
                 car_details = {
                     "Car Year": [highest_sentiment_car['Car_Year']],
                     "Car Brand": [highest_sentiment_car['Car_Brand']],
                     "Car Name": [highest_sentiment_car['Car_Name']],
-                    "Electric Drive": [highest_sentiment_car['electric_DD']],
+                    "Engine": [highest_sentiment_car['L']],
+                    "Cylinders": [highest_sentiment_car['cyl']],
+                    "Type": [highest_sentiment_car['type']],
+                    "Transmission": [highest_sentiment_car['transmission']],
                     "Price": [highest_sentiment_car['Price']]
                 }
                 
-                # Convert the dictionary to a DataFrame
                 car_details_df = pd.DataFrame(car_details)
-            
-                # Display the DataFrame as a table
                 st.table(car_details_df)
             else:
-                 # Create a DataFrame to display car details in table format
-                 car_details = {
-                     "Car Year": [highest_sentiment_car['Car_Year']],
-                     "Car Brand": [highest_sentiment_car['Car_Brand']],
-                     "Car Name": [highest_sentiment_car['Car_Name']],
-                     "Engine": [highest_sentiment_car['L']],
-                     "Cylinders": [highest_sentiment_car['cyl']],
-                     "Type": [highest_sentiment_car['type']],
-                     "Transmission": [highest_sentiment_car['transmission']],
-                     "Price": [highest_sentiment_car['Price']]
-                 }
-                
-                 # Convert the dictionary to a DataFrame
-                 car_details_df = pd.DataFrame(car_details)
-
-                 # Display the DataFrame as a table
-                 st.table(car_details_df)
-        # If no cars match the features, provide a fallback message
-        else:
-            st.write("No cars found matching your exact preferences.")
+                st.write("No cars found matching your exact preferences.")
         
 # If the user doesn't know their preferences
-elif option == "I need top 5 recommendations":
-    st.write("We will show you the top 5 recommended cars based on sentiment analysis.")
+elif option == "I need recommend":
+    st.write("We will show you the Top 5 recommended cars based on sentiment analysis.")
     
     # Let the user specify if they are looking for any particular feature, if desired (optional)
-    user_input = st.text_input("If you have any particular preferences (e.g., comfort, performance), enter them here:")
+    user_input = st.text_input("If you have any overall preferences (e.g., comfort, performance, safety, design, economy), enter them here:")
+    st.write("Example: The car should economy and the cost not too high / I want the car is safety and the protection is in good condition")
     
     if user_input:
         # Proceed with word class classification if the user enters preferences
