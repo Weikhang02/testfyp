@@ -196,7 +196,7 @@ def extract_car_features(input_text, df_reviews):
     price_pattern = re.search(r'price range of (\d+)-(\d+)', input_text)
     engine_pattern = re.search(r'(\d\.\d)L', input_text)
     cyl_pattern = re.search(r'(\d)cyl', input_text)
-    type_pattern = re.search(r'(Turbo|Hybrid|Electric|Diesel|Petrol|etc)', input_text, re.IGNORECASE)
+    type_pattern = re.search(r'(Turbo|gas/electric hybrid|S/C|Turbodiesel|)', input_text, re.IGNORECASE)
     transmission_pattern = re.search(r'(6M|5M|Automatic|Manual|CVT|etc)', input_text, re.IGNORECASE)
     
     # Check for a match with the car name in the dataset
@@ -312,21 +312,37 @@ if option == "I know specific preferences":
                     st.markdown(f"<img src='{image_base64}' style='width:100%' />", unsafe_allow_html=True)
                 else:
                     st.write("Image could not be loaded.")
-
-                # Display car details in table format
-                car_details = {
-                    "Car Year": [highest_sentiment_car['Car_Year']],
-                    "Car Brand": [highest_sentiment_car['Car_Brand']],
-                    "Car Name": [highest_sentiment_car['Car_Name']],
-                    "Engine": [highest_sentiment_car['L']],
-                    "Cylinders": [highest_sentiment_car['cyl']],
-                    "Type": [highest_sentiment_car['type']],
-                    "Transmission": [highest_sentiment_car['transmission']],
-                    "Price($)": [highest_sentiment_car['Price']]
-                }
-                
-                car_details_df = pd.DataFrame(car_details)
-                st.table(car_details_df)
+                    
+                if (row['L']=="no") and (row['cyl']=="no") and (row['type']=="no") and (row['transmission']=="no"):
+                    # Display car details in table format
+                    car_details = {
+                        "Car Year": [highest_sentiment_car['Car_Year']],
+                        "Car Brand": [highest_sentiment_car['Car_Brand']],
+                        "Car Name": [highest_sentiment_car['Car_Name']],
+                        "Electric Drive": [highest_sentiment_car['electric_DD']],
+                        "Price($)": [highest_sentiment_car['Price']]
+                     }
+                    
+                     car_details_df = pd.DataFrame(car_details)
+                     st.table(car_details_df)
+                else:
+                     # Create a DataFrame to display car details in table format
+                     car_details = {
+                        "Car Year": [highest_sentiment_car['Car_Year']],
+                        "Car Brand": [highest_sentiment_car['Car_Brand']],
+                        "Car Name": [highest_sentiment_car['Car_Name']],
+                        "Engine": [highest_sentiment_car['L']],
+                        "Cylinders": [highest_sentiment_car['cyl']],
+                        "Type": [highest_sentiment_car['type']],
+                        "Transmission": [highest_sentiment_car['transmission']],
+                        "Price($)": [highest_sentiment_car['Price']]
+                      }
+                    
+                      # Convert the dictionary to a DataFrame
+                      car_details_df = pd.DataFrame(car_details)
+    
+                      # Display the DataFrame as a table
+                      st.table(car_details_df)
             else:
                 st.write("No cars found matching your exact preferences.")
         
