@@ -281,6 +281,23 @@ if option == "I know specific preferences":
             
             # Filter and show top match (same as before, but with some layout enhancements)
             filtered_df = df_reviews.copy() # (same filtering code as before)
+            
+            # Filter the dataset based on the extracted car features
+            filtered_df = df_reviews.copy()
+            if car_features['Car_Name']:
+                filtered_df = filtered_df[filtered_df['Car_Name'] == car_features['Car_Name']]
+            if car_features['Car_Brand']:
+                filtered_df = filtered_df[filtered_df['Car_Brand'].fillna('').str.contains(car_features['Car_Brand'], case=False)]
+            if car_features['Price_Min'] and car_features['Price_Max']:
+                filtered_df = filtered_df[(filtered_df['Price'] >= car_features['Price_Min']) & (filtered_df['Price'] <= car_features['Price_Max'])]
+            if car_features['L']:
+                filtered_df = filtered_df[filtered_df['L'].fillna('').str.contains(car_features['L'], case=False)]
+            if car_features['cyl']:
+                filtered_df = filtered_df[filtered_df['cyl'].fillna('').str.contains(car_features['cyl'], case=False)]
+            if car_features['type']:
+                filtered_df = filtered_df[filtered_df['type'].fillna('').str.contains(car_features['type'], case=False)]
+            if car_features['transmission']:
+                filtered_df = filtered_df[filtered_df['transmission'].fillna('').str.contains(car_features['transmission'], case=False)]
 
             if not filtered_df.empty:
                 filtered_df['sentiment_score'] = filtered_df['vader_ss']
@@ -332,48 +349,57 @@ elif option == "I need a recommendation":
     user_input = st.text_input("Do you have any overall preferences? (e.g., comfort, safety, performance, etc.)")
     
     if user_input:
+        # Proceed with word class classification if the user enters preferences
         classified_class, class_counts = classify_user_input(user_input, word_classes)
-        st.write(f"### Based on your input, we recommend cars focused on **{classified_class}**.")
+        st.write(f"Your input suggests you are looking for a car with a focus on **{classified_class}**.")
     
-    # Get class counts by car and rank (same as before)
-    class_counts_df = get_class_counts_by_car(df_reviews, word_classes)
+        # Calculate class counts for each car
+        class_counts_df = get_class_counts_by_car(df_reviews, word_classes)
     
-    category = classified_class if user_input else 'comfort'
-    top_5_cars = rank_cars_by_category(class_counts_df, category, top_n=5)
-    
-    st.write(f"### Here are the top 5 cars for **{category}**:")
+        # Rank cars based on the classified word class or default to 'comfort'
+        category = classified_class if user_input else 'comfort'  # Default to 'comfort' if no input
+        top_5_cars = rank_cars_by_category(class_counts_df, category, top_n=5)
+        
+        # Match top 5 cars by car name to retrieve the relevant details
+        top_5_car_details = df_reviews[df_reviews['Car_Name'].isin(top_5_cars.index)]
+        
+        # Remove duplicate entries by keeping the first occurrence of each car name
+        top_5_car_details = top_5_car_details.drop_duplicates(subset=['Car_Name'], keep='first')
 
-    for i, row in top_5_car_details.iterrows():
-        with st.expander(f"{row['Car_Name']} (Click for details)"):
-            col1, col2 = st.columns([1, 2])
-            
-            with col1:
-                car_image_path = get_car_image(row['Car_Name'])
-                image_base64 = image_to_base64(car_image_path)
-                if image_base64:
-                    st.markdown(f"<img src='{image_base64}' style='width:100%' />", unsafe_allow_html=True)
-                else:
-                    st.write("Image could not be loaded.")
-            
-            with col2:
-                if row['L'] == "no":
-                    car_details = {
-                        "Car Year": [row['Car_Year']],
-                        "Car Brand": [row['Car_Brand']],
-                        "Car Name": [row['Car_Name']],
-                        "Electric Drive": ["Yes"],
-                        "Price ($)": [row['Price']]
-                    }
-                else:
-                    car_details = {
-                        "Car Year": [row['Car_Year']],
-                        "Car Brand": [row['Car_Brand']],
-                        "Car Name": [row['Car_Name']],
-                        "Engine": [row['L']],
-                        "Cylinders": [row['cyl']],
-                        "Type": [row['type']],
-                        "Transmission": [row['transmission']],
-                        "Price ($)": [row['Price']]
-                    }
-                car_details_df = pd.DataFrame(car_details)
-                st.table(car_details_df)
+        # Display the top 5 cars
+        st.write(f"Here are the top 5 cars based on **{category}**:")
+
+        for i, row in top_5_car_details.iterrows():
+            with st.expander(f"{row['Car_Name']} (Click for details)"):
+                col1, col2 = st.columns([1, 2])
+                
+                with col1:
+                    car_image_path = get_car_image(row['Car_Name'])
+                    image_base64 = image_to_base64(car_image_path)
+                    if image_base64:
+                        st.markdown(f"<img src='{image_base64}' style='width:100%' />", unsafe_allow_html=True)
+                    else:
+                        st.write("Image could not be loaded.")
+                
+                with col2:
+                    if row['L'] == "no" and row['cyl']=="no" and row['type']=="no" and row['transmission']=="no":
+                        car_details = {
+                            "Car Year": [row['Car_Year']],
+                            "Car Brand": [row['Car_Brand']],
+                            "Car Name": [row['Car_Name']],
+                            "Electric Drive": ["Yes"],
+                            "Price ($)": [row['Price']]
+                        }
+                    else:
+                        car_details = {
+                            "Car Year": [row['Car_Year']],
+                            "Car Brand": [row['Car_Brand']],
+                            "Car Name": [row['Car_Name']],
+                            "Engine": [row['L']],
+                            "Cylinders": [row['cyl']],
+                            "Type": [row['type']],
+                            "Transmission": [row['transmission']],
+                            "Price ($)": [row['Price']]
+                        }
+                    car_details_df = pd.DataFrame(car_details)
+                    st.table(car_details_df)
