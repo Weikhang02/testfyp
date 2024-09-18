@@ -170,7 +170,7 @@ st.title("🚗 Sentiment-Based Car Recommendation System")
 # Add an expander for data loading and preprocessing explanation
 with st.expander("ℹ️ How we preprocess your reviews and calculate recommendations"):
     st.write("""
-    1. We clean the reviews by removing numbers, punctuation, and abbreviations.
+    1. We clean the reviews by removing punctuation, abbreviations & etc.
     2. We apply sentiment analysis using VADER to get a score for each review.
     3. Finally, we classify the reviews into different categories such as performance, safety, comfort, etc., based on keywords.
     """)
@@ -276,8 +276,8 @@ if option == "I know specific preferences":
             st.warning("🚫 No cars found matching your exact preferences.")
         else:
             # Show extracted features
-            st.write(f"### Extracted Car Features:")
-            st.json(car_features)
+            #st.write(f"### Extracted Car Features:")
+            #st.json(car_features)
             
             # Filter and show top match (same as before, but with some layout enhancements)
             filtered_df = df_reviews.copy() # (same filtering code as before)
