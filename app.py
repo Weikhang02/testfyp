@@ -283,8 +283,8 @@ if option == "I know specific preferences":
             filtered_df = df_reviews.copy() # (same filtering code as before)
 
             if not filtered_df.empty:
+                filtered_df['sentiment_score'] = filtered_df['vader_ss']
                 highest_sentiment_car = filtered_df.loc[filtered_df['sentiment_score'].idxmax()]
-                
                 # Use columns to display image and car details side by side
                 col1, col2 = st.columns([1, 2])
 
