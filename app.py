@@ -267,7 +267,7 @@ if option == "I know specific preferences":
     user_input = st.text_input("Describe your ideal car (e.g., brand, price between (xxx to xxx), Engine(in L), Cylinder(in cyl), Type or Transmission(M,A,AM):")
     if user_input:
         # Extract car features from user input
-        car_features = extract_car_features(user_input, df_reviews)
+        # car_features = extract_car_features(user_input, df_reviews)
         
         # Check if all extracted features are None
         if all(value is None for value in car_features.values()):
@@ -319,7 +319,7 @@ if option == "I know specific preferences":
                         "Car Year": [highest_sentiment_car['Car_Year']],
                         "Car Brand": [highest_sentiment_car['Car_Brand']],
                         "Car Name": [highest_sentiment_car['Car_Name']],
-                        "Electric Drive": [highest_sentiment_car['electric_DD']],
+                        "Electric Drive": "Yes"],
                         "Price ($)": [highest_sentiment_car['Price']]
                     }
                     
@@ -345,7 +345,7 @@ if option == "I know specific preferences":
                     st.table(car_details_df)
             else:
                 st.write("No cars found matching your exact preferences.")
-        
+
 # If the user doesn't know their preferences
 elif option == "I need recommend":
     st.write("We will show you the Top 5 recommended cars based on sentiment analysis.")
