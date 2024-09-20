@@ -23,7 +23,7 @@ st.markdown("""
     <style>
     .custom-text {
         font-family: 'Pacifico', cursive;
-        font-size: 24px;
+        font-size: 20px;
         color: #4B9CD3;
     }
     .custom-input-label {
@@ -283,10 +283,7 @@ if option == "I know specific preferences":
     
     # Display the styled example text
     st.markdown('<p class="custom-text">Example: I want a Ford car, Turbo and the transmission is 6M</p>', unsafe_allow_html=True)
-    
-    # Display the styled input field
-    st.markdown('<p class="custom-input-label">Describe your ideal car (e.g., brand, price range, engine, transmission):</p>', unsafe_allow_html=True)
-    user_input = st.text_input("")
+    user_input = st.text_input("Describe your ideal car (e.g., brand, price range, engine, transmission)")
     
     if user_input:
         # Extract car features from user input
