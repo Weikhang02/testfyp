@@ -26,10 +26,13 @@ st.markdown("""
         font-size: 20px;
         color: #4B9CD3;
     }
-    .custom-input-label {
+   input[type="text"] {
         font-family: 'Times New Roman', sans-serif;
         font-size: 18px;
-        font-weight: bold;
+        padding: 8px;
+        border-radius: 5px;
+        border: 1px solid #4B9CD3;
+        width: 100%;
         color: #333333;
     }
     </style>
