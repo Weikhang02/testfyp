@@ -373,7 +373,7 @@ elif option == "I need a recommendation":
             with st.expander(f"{row['Car_Name']} (Click for details)"):
                col = st.columns([1])[0]
                 
-                with col:
+               with col:
                     car_image_path = get_car_image(row['Car_Name'])
                     image_base64 = image_to_base64(car_image_path)
                     if image_base64:
