@@ -23,17 +23,8 @@ st.markdown("""
     <style>
     .custom-text {
         font-family: 'Pacifico', cursive;
-        font-size: 20px;
+        font-size: 16px;
         color: #4B9CD3;
-    }
-   input[type="text"] {
-        font-family: 'Times New Roman', sans-serif;
-        font-size: 18px;
-        padding: 8px;
-        border-radius: 5px;
-        border: 1px solid #4B9CD3;
-        width: 100%;
-        color: #333333;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -368,8 +359,7 @@ if option == "I know specific preferences":
 # If user doesn't know their preferences
 elif option == "I need a recommendation":
     st.subheader("💡 Top 5 Recommended Cars Based on Sentiment Analysis")
-    
-    st.write("Let us know what you are looking for, or leave it blank to see our default recommendations.")
+    st.markdown('<p class="custom-text">Let us know what you are looking for, or leave it blank to see our default recommendations.</p>', unsafe_allow_html=True)
     
     user_input = st.text_input("Do you have any overall preferences? (Example: comfort, safety, performance, design or economy )")
     
