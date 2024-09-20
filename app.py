@@ -371,35 +371,38 @@ elif option == "I need a recommendation":
 
         for i, row in top_5_car_details.iterrows():
             with st.expander(f"{row['Car_Name']} (Click for details)"):
-                col1, col2 = st.columns([1, 2])
+               col = st.columns([1])[0]
                 
-                with col1:
-                    car_image_path = get_car_image(row['Car_Name'])
-                    image_base64 = image_to_base64(car_image_path)
-                    if image_base64:
-                        st.markdown(f"<img src='{image_base64}' style='width:100%' />", unsafe_allow_html=True)
-                    else:
-                        st.write("Image could not be loaded.")
+                with col:
+                car_image_path = get_car_image(row['Car_Name'])
+                image_base64 = image_to_base64(car_image_path)
+                if image_base64:
+                    # Center the image
+                    st.markdown(f"<div style='text-align: center;'><img src='{image_base64}' style='width:100%' /></div>", unsafe_allow_html=True)
+                else:
+                    st.write("Image could not be loaded.")
+    
+                # Prepare the car details
+                if row['L'] == "no" and row['cyl'] == "no" and row['type'] == "no" and row['transmission'] == "no":
+                    car_details = {
+                        "Car Year": [row['Car_Year']],
+                        "Car Brand": [row['Car_Brand']],
+                        "Car Name": [row['Car_Name']],
+                        "Electric Drive": ["Yes"],
+                        "Price ($)": [row['Price']]
+                    }
+                else:
+                    car_details = {
+                        "Car Year": [row['Car_Year']],
+                        "Car Brand": [row['Car_Brand']],
+                        "Car Name": [row['Car_Name']],
+                        "Engine": [row['L']],
+                        "Cylinders": [row['cyl']],
+                        "Type": [row['type']],
+                        "Transmission": [row['transmission']],
+                        "Price ($)": [row['Price']]
+                    }
                 
-                with col2:
-                    if row['L'] == "no" and row['cyl']=="no" and row['type']=="no" and row['transmission']=="no":
-                        car_details = {
-                            "Car Year": [row['Car_Year']],
-                            "Car Brand": [row['Car_Brand']],
-                            "Car Name": [row['Car_Name']],
-                            "Electric Drive": ["Yes"],
-                            "Price ($)": [row['Price']]
-                        }
-                    else:
-                        car_details = {
-                            "Car Year": [row['Car_Year']],
-                            "Car Brand": [row['Car_Brand']],
-                            "Car Name": [row['Car_Name']],
-                            "Engine": [row['L']],
-                            "Cylinders": [row['cyl']],
-                            "Type": [row['type']],
-                            "Transmission": [row['transmission']],
-                            "Price ($)": [row['Price']]
-                        }
-                    car_details_df = pd.DataFrame(car_details)
-                    st.table(car_details_df)
+                # Display the car details table below the image
+                car_details_df = pd.DataFrame(car_details)
+                st.table(car_details_df)
