@@ -23,7 +23,7 @@ st.markdown("""
     <style>
     .custom-text {
         font-family: 'Pacifico', cursive;
-        font-size: 16px;
+        font-size: 14px;
         color: #4B9CD3;
     }
     </style>
