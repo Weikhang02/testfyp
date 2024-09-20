@@ -302,41 +302,46 @@ if option == "I know specific preferences":
             if not filtered_df.empty:
                 filtered_df['sentiment_score'] = filtered_df['vader_ss']
                 highest_sentiment_car = filtered_df.loc[filtered_df['sentiment_score'].idxmax()]
-                # Use columns to display image and car details side by side
-                col1, col2 = st.columns([1, 2])
-
-                with col1:
-                    car_name = highest_sentiment_car['Car_Name']
-                    car_image_path = get_car_image(car_name)
-                    image_base64 = image_to_base64(car_image_path)
-                    if image_base64:
-                        st.markdown(f"<img src='{image_base64}' style='width:100%' />", unsafe_allow_html=True)
-                    else:
-                        st.write("Image could not be loaded.")
-                
-                with col2:
-                    if highest_sentiment_car['L'] == "no":
-                        car_details = {
-                            "Car Year": [highest_sentiment_car['Car_Year']],
-                            "Car Brand": [highest_sentiment_car['Car_Brand']],
-                            "Car Name": [highest_sentiment_car['Car_Name']],
-                            "Electric Drive": ["Yes"],
-                            "Price ($)": [highest_sentiment_car['Price']]
-                        }
-                    else:
-                        car_details = {
-                            "Car Year": [highest_sentiment_car['Car_Year']],
-                            "Car Brand": [highest_sentiment_car['Car_Brand']],
-                            "Car Name": [highest_sentiment_car['Car_Name']],
-                            "Engine": [highest_sentiment_car['L']],
-                            "Cylinders": [highest_sentiment_car['cyl']],
-                            "Type": [highest_sentiment_car['type']],
-                            "Transmission": [highest_sentiment_car['transmission']],
-                            "Price ($)": [highest_sentiment_car['Price']]
-                        }
-                    
-                    car_details_df = pd.DataFrame(car_details)
-                    st.table(car_details_df)
+            
+                with st.expander(f"{highest_sentiment_car['Car_Name']} (Click for details)"):
+                    # Create a single column to center the image and have the table below it
+                    col = st.columns([1])[0]
+            
+                    with col:
+                        car_name = highest_sentiment_car['Car_Name']
+                        car_image_path = get_car_image(car_name)
+                        image_base64 = image_to_base64(car_image_path)
+                        
+                        if image_base64:
+                            # Center the image
+                            st.markdown(f"<div style='text-align: center;'><img src='{image_base64}' style='width:100%' /></div>", unsafe_allow_html=True)
+                        else:
+                            st.write("Image could not be loaded.")
+            
+                        # Prepare the car details
+                        if highest_sentiment_car['L'] == "no":
+                            car_details = {
+                                "Car Year": [highest_sentiment_car['Car_Year']],
+                                "Car Brand": [highest_sentiment_car['Car_Brand']],
+                                "Car Name": [highest_sentiment_car['Car_Name']],
+                                "Electric Drive": ["Yes"],
+                                "Price ($)": [highest_sentiment_car['Price']]
+                            }
+                        else:
+                            car_details = {
+                                "Car Year": [highest_sentiment_car['Car_Year']],
+                                "Car Brand": [highest_sentiment_car['Car_Brand']],
+                                "Car Name": [highest_sentiment_car['Car_Name']],
+                                "Engine": [highest_sentiment_car['L']],
+                                "Cylinders": [highest_sentiment_car['cyl']],
+                                "Type": [highest_sentiment_car['type']],
+                                "Transmission": [highest_sentiment_car['transmission']],
+                                "Price ($)": [highest_sentiment_car['Price']]
+                            }
+                        
+                        # Display the car details table below the image
+                        car_details_df = pd.DataFrame(car_details)
+                        st.table(car_details_df)
             else:
                 st.error("🚫 No cars found matching your exact preferences.")
 
