@@ -26,6 +26,10 @@ st.markdown("""
         font-size: 14px;
         color: #4B9CD3;
     }
+    .custom-category-text {
+        font-family: 'Georgia', serif;
+        font-size: 16px;
+        color: #4B9CD3;
     </style>
     """, unsafe_allow_html=True)
 
@@ -365,8 +369,9 @@ elif option == "I need a recommendation":
     
     if user_input:
         # Proceed with word class classification if the user enters preferences
-        classified_class, class_counts = classify_user_input(user_input, word_classes)
-        st.write(f"Your input suggests you are looking for a car with a focus on **{classified_class}**.")
+        classified_class, class_counts = classify_user_input(user_input, word_classes)   
+        st.markdown(f'<p class="custom-category-text">Your input suggests you are looking for a car with a focus on <strong>{classified_class}</strong>.</p>', unsafe_allow_html=True)
+        #st.write(f"Your input suggests you are looking for a car with a focus on **{classified_class}**.")
     
         # Calculate class counts for each car
         class_counts_df = get_class_counts_by_car(df_reviews, word_classes)
@@ -382,7 +387,7 @@ elif option == "I need a recommendation":
         top_5_car_details = top_5_car_details.drop_duplicates(subset=['Car_Name'], keep='first')
 
         # Display the top 5 cars
-        st.write(f"Here are the top 5 cars based on **{category}**:")
+        st.markdown(f'<p class="custom-category-text">Here are the top 5 cars based on <strong>{category}</strong>:</p>', unsafe_allow_html=True)
 
         for i, row in top_5_car_details.iterrows():
             with st.expander(f"{row['Car_Name']} (Click for details)"):
