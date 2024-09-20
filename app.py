@@ -371,7 +371,7 @@ elif option == "I need a recommendation":
     
     st.write("Let us know what you are looking for, or leave it blank to see our default recommendations.")
     
-    user_input = st.text_input("Do you have any overall preferences? (e.g., comfort, safety, performance, etc.)")
+    user_input = st.text_input("Do you have any overall preferences? (Example: comfort, safety, performance, design or economy )")
     
     if user_input:
         # Proceed with word class classification if the user enters preferences
